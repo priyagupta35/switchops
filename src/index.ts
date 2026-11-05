@@ -1,0 +1,55 @@
+import http from 'http';
+import { SwitchBridge } from './core/switch-bridge.ts';
+import { SwitchOpsAgent } from './core/agent.ts';
+import { SAMPLE_INCIDENTS } from './demo/sample-incident-data.ts';
+
+const PORT = parseInt(process.env.PORT || '3000', 10);
+const ROOM_ID = process.env.SWITCH_ROOM_ID || 'incident-war-room-402';
+
+async function bootstrap() {
+  console.log(`Starting SwitchOps Agent Bridge for Room: ${ROOM_ID}...`);
+
+  const bridge = new SwitchBridge(ROOM_ID, '#incident-war-room', 'slack');
+  const agent = new SwitchOpsAgent(bridge);
+
+  // HTTP Webhook server for incoming monitoring alerts (Sentry, Datadog, PagerDuty)
+  const server = http.createServer(async (req, res) => {
+    if (req.method === 'POST' && req.url === '/webhook/alert') {
+      let body = '';
+      req.on('data', (chunk) => {
+        body += chunk;
+      });
+      req.on('end', async () => {
+        try {
+          const parsed = JSON.parse(body || '{}');
+          const alert = parsed.alert || SAMPLE_INCIDENTS.payment_npe;
+          console.log(`[SwitchOps Webhook] Received alert: ${alert.title}`);
+
+          const response = await agent.triggerIncidentWorkflow(alert);
+          res.writeHead(200, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ status: 'ACKNOWLEDGED', response }));
+        } catch (error: any) {
+          res.writeHead(500, { 'Content-Type': 'application/json' });
+          res.end(JSON.stringify({ error: error.message }));
+        }
+      });
+    } else if (req.method === 'GET' && req.url === '/health') {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ status: 'UP', room: ROOM_ID }));
+    } else {
+      res.writeHead(404);
+      res.end('Not Found');
+    }
+  });
+
+  server.listen(PORT, () => {
+    console.log(`✓ SwitchOps Agent listening on port ${PORT}`);
+    console.log(`✓ Webhook endpoint available at http://localhost:${PORT}/webhook/alert`);
+    console.log(`✓ Run 'npm run demo' to view the interactive incident workflow simulation.`);
+  });
+}
+
+bootstrap().catch((err) => {
+  console.error('Fatal initialization error:', err);
+  process.exit(1);
+});

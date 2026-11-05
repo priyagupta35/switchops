@@ -1,0 +1,30 @@
+{
+  "name": "switchops",
+  "version": "1.0.0",
+  "description": "SwitchOps - Autonomous Incident Commander & SRE Teammate powered by Switch AI",
+  "main": "src/index.ts",
+  "type": "module",
+  "scripts": {
+    "start": "node --experimental-strip-types src/index.ts",
+    "demo": "node --experimental-strip-types src/demo/demo-runner.ts",
+    "test": "node --experimental-strip-types src/demo/demo-runner.ts",
+    "dev": "node --experimental-strip-types src/demo/demo-runner.ts"
+  },
+  "keywords": [
+    "switch",
+    "ai-agent",
+    "hackathon",
+    "wemakedevs",
+    "incident-response",
+    "devops",
+    "sre",
+    "slack",
+    "discord"
+  ],
+  "author": "SwitchOps Team",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "typescript": "^5.4.0"
+  }
+}
