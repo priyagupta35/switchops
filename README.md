@@ -57,8 +57,9 @@ Instead of developers logging out of chat to debug in isolation, **SwitchOps joi
 
 ## ✨ Key Features
 
-1. **Native Switch Room Collaboration**:
-   - Resides directly inside team channels via Switch without requiring custom bot infrastructure for every platform.
+1. **Native Switch Room Collaboration & Human-in-the-Loop Guardrails**:
+   - Resides directly inside team channels via Switch without requiring custom bot infrastructure.
+   - **Mandatory Human Permission Gate**: Strict runtime guardrail policy where destructive operations (production merges, deployments, rollback commands) require explicit human authorization in the channel before execution.
    - Listens to human engineers, answers technical questions, and takes direct commands (`@SwitchOps status`, `@SwitchOps postmortem`).
 
 2. **Intelligent Commit Correlation**:

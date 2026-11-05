@@ -253,11 +253,6 @@ export function getWarRoomHtml(): string {
       filter: brightness(1.1);
       box-shadow: 0 0 10px var(--accent-glow);
     }
-    .btn-secondary {
-      background: #242a35;
-      color: var(--text-main);
-    }
-    .btn-secondary:hover { background: #2f3746; }
 
     /* Messages Stream */
     .messages-container {
@@ -364,6 +359,108 @@ export function getWarRoomHtml(): string {
       border-radius: 12px;
       font-weight: 600;
     }
+
+    /* Human-in-the-Loop Permission Guardrail Card */
+    .guardrail-card {
+      margin-top: 14px;
+      background: #181d24;
+      border: 1.5px solid var(--warning);
+      border-radius: 8px;
+      padding: 14px 16px;
+      box-shadow: 0 0 16px rgba(245, 158, 11, 0.15);
+      animation: fadeIn 0.4s ease;
+    }
+    .guardrail-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    .guardrail-title {
+      font-weight: 800;
+      font-size: 13px;
+      color: var(--warning);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      letter-spacing: 0.5px;
+    }
+    .guardrail-badge {
+      background: rgba(245, 158, 11, 0.18);
+      border: 1px solid var(--warning);
+      color: #fbbf24;
+      font-size: 10px;
+      font-weight: bold;
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+    .guardrail-desc {
+      font-size: 13px;
+      color: #cbd5e1;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+    .guardrail-meta {
+      display: flex;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--text-dim);
+      background: #101317;
+      padding: 8px 12px;
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }
+    .guardrail-meta strong { color: #f1f5f9; }
+    .guardrail-actions {
+      display: flex;
+      gap: 10px;
+    }
+    .btn-approve {
+      background: #10b981;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-approve:hover {
+      background: #059669;
+      box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
+    }
+    .btn-reject {
+      background: #334155;
+      color: #cbd5e1;
+      border: 1px solid var(--border-color);
+      padding: 8px 14px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .btn-reject:hover { background: #475569; }
+    .guardrail-status-banner {
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .status-approved {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid #10b981;
+      color: #34d399;
+    }
+    .status-rejected {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid #ef4444;
+      color: #f87171;
+    }
+
     .metric-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -508,9 +605,9 @@ export function getWarRoomHtml(): string {
 
     <div class="sidebar-section" style="margin-top: auto; border-top: 1px solid var(--border-color);">
       <div style="font-size: 11px; color: var(--text-dim); line-height: 1.5;">
-        🏆 <strong>Flip the Switch Hackathon</strong><br>
-        Track 1: Best Business Workflow<br>
-        Powered by Switch AI
+        🛡️ <strong>Human-in-the-Loop</strong><br>
+        Autonomous agent guardrails active.<br>
+        Human permission required for production merges.
       </div>
     </div>
   </div>
@@ -535,7 +632,7 @@ export function getWarRoomHtml(): string {
           <div class="theme-dot theme-amber" onclick="setTheme('amber')" title="Solar Amber"></div>
         </div>
 
-        <div class="incident-status-pill">
+        <div class="incident-status-pill" id="statusPill">
           <div class="pulse-dot"></div>
           P0 CRITICAL OUTAGE
         </div>
@@ -554,8 +651,8 @@ export function getWarRoomHtml(): string {
           </div>
           <div class="msg-bubble agent-bubble">
             👋 Welcome to the <strong>Switch Incident War Room</strong>! I am <strong>@SwitchOps</strong>, your autonomous SRE teammate.<br><br>
-            • Click <strong>"▶️ Run Live Simulation"</strong> above to watch a full P0 incident resolution unfold in real-time.<br>
-            • Or use the <strong>quick chips</strong> or <strong>chat box below</strong> to ask me questions (e.g. <code>@SwitchOps status</code>, <code>@SwitchOps diff</code>, <code>@SwitchOps test</code>)!
+            🔒 <strong>Safety Guardrails Active</strong>: I will never deploy or merge to production without explicit human permission in this room.<br>
+            • Click <strong>"▶️ Run Live Simulation"</strong> above to see the full incident response, root cause analysis, and the <strong>Human Permission Gate</strong> in action!
           </div>
         </div>
       </div>
@@ -573,7 +670,7 @@ export function getWarRoomHtml(): string {
       <span class="chip" onclick="quickAsk('@SwitchOps test')">🧪 Run Reproduction Tests</span>
       <span class="chip" onclick="quickAsk('@SwitchOps pr')">⚡ View GitHub PR</span>
       <span class="chip" onclick="quickAsk('@SwitchOps postmortem')">📄 Generate Post-Mortem</span>
-      <span class="chip" onclick="quickAsk('How does Switch help engineering teams?')">💡 How Switch Works</span>
+      <span class="chip" onclick="quickAsk('Does Switch require human approval before deployment?')">🛡️ Guardrail Rules</span>
     </div>
 
     <div class="chat-footer">
@@ -587,6 +684,7 @@ export function getWarRoomHtml(): string {
   <script>
     const messagesContainer = document.getElementById('messagesContainer');
     const typingIndicator = document.getElementById('typingIndicator');
+    let hasApprovedDeploy = false;
 
     // Theme switching logic
     const themes = {
@@ -643,7 +741,7 @@ export function getWarRoomHtml(): string {
       await sleep(1800);
       typingIndicator.style.display = 'none';
 
-      // 2. SwitchOps initial diagnosis & PR
+      // 2. SwitchOps initial diagnosis, PR & HUMAN PERMISSION GATE
       appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
         <div>
           <div style="font-weight: 700; color: #ef4444; margin-bottom: 6px;">🚨 P0 INCIDENT DETECTED by Sentry (INC-9042)</div>
@@ -671,54 +769,116 @@ export function getWarRoomHtml(): string {
               Branch: <code>switchops/hotfix-inc-9042</code> • Automated reproduction test suite included.
             </div>
           </div>
-          <div style="margin-top: 8px; color: #38bdf8; font-weight: 600;">👉 Please review and approve PR #973 to deploy to production.</div>
-        </div>
-      \`);
 
-      await sleep(2200);
-
-      // 3. Alex responds
-      appendMessage('👨‍🔧', 'Alex Rivera', 'Senior Backend Dev', false,
-        'Shoot, that was my PR from 20 minutes ago! I assumed all customer objects had active subscriptions populated. Checking the hotfix PR link now... Verified, approved and merged!');
-
-      await sleep(1500);
-
-      // 4. Jordan asks for postmortem
-      appendMessage('👨‍💻', 'Jordan Rivera', 'Staff SRE Lead', false,
-        '@SwitchOps postmortem --include-action-items');
-
-      typingIndicator.style.display = 'flex';
-      await sleep(1800);
-      typingIndicator.style.display = 'none';
-
-      // 5. Postmortem delivery
-      appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
-        <div>
-          <div style="font-weight: 700; color: #10b981; margin-bottom: 8px;">📄 Post-Mortem Report Generated (Incident INC-9042)</div>
-          
-          <div class="metric-grid">
-            <div class="metric-card">
-              <div class="metric-value">14 min</div>
-              <div class="metric-label">Mean Time to Resolve</div>
+          <!-- HUMAN PERMISSION GATE -->
+          <div class="guardrail-card" id="guardrailGate">
+            <div class="guardrail-header">
+              <span class="guardrail-title">🛡️ SWITCH GUARDRAIL: HUMAN PERMISSION REQUIRED</span>
+              <span class="guardrail-badge">AWAITING APPROVAL</span>
             </div>
-            <div class="metric-card">
-              <div class="metric-value">185</div>
-              <div class="metric-label">Failed Checkouts</div>
+            <div class="guardrail-desc">
+              Switch policy prevents autonomous deployment to production without verified human consent. Review the hotfix patch and authorize deployment:
             </div>
-            <div class="metric-card">
-              <div class="metric-value">$14,800</div>
-              <div class="metric-label">Revenue Recovered</div>
+            <div class="guardrail-meta">
+              <span><strong>Target:</strong> PaymentProcessorService (production)</span>
+              <span><strong>Action:</strong> Merge PR #973 & Deploy Canary</span>
+              <span><strong>Risk Level:</strong> <span style="color: #ef4444; font-weight: bold;">HIGH</span></span>
             </div>
-          </div>
-
-          <div style="background: #0f1318; border: 1px solid var(--card-border); border-radius: 6px; padding: 12px; font-size: 13px;">
-            <div style="font-weight: 700; margin-bottom: 4px;">Assigned Action Items:</div>
-            <div>• [HIGH] Add ESLint rule for strict optional chaining on nullable schemas (Owner: <strong>@alex</strong>)</div>
-            <div>• [HIGH] Introduce contract integration tests for guest customer checkouts (Owner: <strong>@sarah</strong>)</div>
-            <div>• [MEDIUM] Deploy SwitchOps pre-merge canary validation bot (Owner: <strong>@sre-team</strong>)</div>
+            <div class="guardrail-actions" id="guardrailActions">
+              <button class="btn-approve" onclick="handleHumanApproval(true)">✅ Approve & Execute Deployment</button>
+              <button class="btn-reject" onclick="handleHumanApproval(false)">❌ Reject & Request Changes</button>
+            </div>
           </div>
         </div>
       \`);
+    }
+
+    async function handleHumanApproval(approved) {
+      const actionsDiv = document.getElementById('guardrailActions');
+      if (!actionsDiv) return;
+
+      if (approved) {
+        hasApprovedDeploy = true;
+        actionsDiv.innerHTML = \`
+          <div class="guardrail-status-banner status-approved">
+            ✅ AUTHORIZED BY: Jordan Rivera (Staff SRE Lead) at \${new Date().toLocaleTimeString()}
+          </div>
+        \`;
+
+        // Alex acknowledges
+        appendMessage('👨‍🔧', 'Alex Rivera', 'Senior Backend Dev', false,
+          'Verified the patch! I approved the PR on GitHub too. Deploying now.');
+
+        // Typing indicator
+        typingIndicator.style.display = 'flex';
+        await sleep(1500);
+        typingIndicator.style.display = 'none';
+
+        // SwitchOps proceeds with deployment execution
+        appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
+          🚀 <strong>Production Deployment Executed (Authorized by SRE Lead)</strong>:<br>
+          • Merged PR #973 into <code>main</code> branch.<br>
+          • Canary pods deployed to AWS us-east-1.<br>
+          • <strong>Health Check</strong>: Checkout error rate dropped from 15% ➔ <strong>0.00%</strong>.<br>
+          • Incident INC-9042 status updated to <strong>RESOLVED</strong>.
+        \`);
+
+        // Update top status pill to green
+        const pill = document.getElementById('statusPill');
+        if (pill) {
+          pill.style.background = 'rgba(16, 185, 129, 0.15)';
+          pill.style.borderColor = '#10b981';
+          pill.style.color = '#34d399';
+          pill.innerHTML = '✓ INCIDENT RESOLVED';
+        }
+
+        await sleep(1500);
+
+        // Jordan asks for postmortem
+        appendMessage('👨‍💻', 'Jordan Rivera', 'Staff SRE Lead', false,
+          '@SwitchOps postmortem --include-action-items');
+
+        typingIndicator.style.display = 'flex';
+        await sleep(1600);
+        typingIndicator.style.display = 'none';
+
+        // Postmortem
+        appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
+          <div>
+            <div style="font-weight: 700; color: #10b981; margin-bottom: 8px;">📄 Post-Mortem Report Generated (Incident INC-9042)</div>
+            
+            <div class="metric-grid">
+              <div class="metric-card">
+                <div class="metric-value">14 min</div>
+                <div class="metric-label">Mean Time to Resolve</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-value">185</div>
+                <div class="metric-label">Failed Checkouts</div>
+              </div>
+              <div class="metric-card">
+                <div class="metric-value">$14,800</div>
+                <div class="metric-label">Revenue Recovered</div>
+              </div>
+            </div>
+
+            <div style="background: #0f1318; border: 1px solid var(--card-border); border-radius: 6px; padding: 12px; font-size: 13px;">
+              <div style="font-weight: 700; margin-bottom: 4px;">Assigned Action Items:</div>
+              <div>• [HIGH] Add ESLint rule for strict optional chaining on nullable schemas (Owner: <strong>@alex</strong>)</div>
+              <div>• [HIGH] Introduce contract integration tests for guest customer checkouts (Owner: <strong>@sarah</strong>)</div>
+              <div>• [MEDIUM] Deploy SwitchOps pre-merge canary validation bot (Owner: <strong>@sre-team</strong>)</div>
+            </div>
+          </div>
+        \`);
+      } else {
+        actionsDiv.innerHTML = \`
+          <div class="guardrail-status-banner status-rejected">
+            ❌ REJECTED BY: Human Operator at \${new Date().toLocaleTimeString()}
+          </div>
+        \`;
+        appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true,
+          '⚠️ <strong>Deployment Aborted</strong>: Hotfix deployment was halted per human instruction. No changes were applied to production.');
+      }
     }
 
     function quickAsk(text) {
@@ -748,9 +908,17 @@ export function getWarRoomHtml(): string {
         appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
           📊 <strong>Current Switch War Room Status</strong>:<br>
           • <strong>Room</strong>: <code>#incident-war-room (incident-war-room-402)</code><br>
-          • <strong>Health</strong>: <code>OPERATIONAL</code> (Recovered from P0 INC-9042)<br>
-          • <strong>Active AI Teammate</strong>: <code>@SwitchOps</code> (via Switch Agent Bridge)<br>
-          • <strong>Connected Repositories</strong>: <code>acme-corp/payment-gateway</code>
+          • <strong>Health</strong>: <code>\${hasApprovedDeploy ? 'OPERATIONAL' : 'P0_TRIAGE'}</code><br>
+          • <strong>Active Guardrail</strong>: <code>Human Permission Required for Merges</code><br>
+          • <strong>Active AI Teammate</strong>: <code>@SwitchOps</code> (via Switch Agent Bridge)
+        \`);
+      } else if (lower.includes('approval') || lower.includes('guardrail') || lower.includes('permission')) {
+        appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
+          🛡️ <strong>Switch Human-in-the-Loop Guardrail Policy</strong>:<br>
+          Switch operates under strict <strong>Human-in-the-Loop oversight</strong>:<br>
+          1. <strong>Read Operations</strong> (git log, stack trace parsing, test execution) are autonomous.<br>
+          2. <strong>Destructive Operations</strong> (merging PRs, deploying to production, altering infra) <strong>REQUIRE explicit human sign-off</strong> in this channel.<br>
+          3. Engineers must click <strong>[Approve]</strong> or explicitly type authorization before any code reaches production.
         \`);
       } else if (lower.includes('diff') || lower.includes('blame') || lower.includes('commit')) {
         appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
@@ -787,7 +955,7 @@ describe('Incident INC-9042 Reproduction', () => {
             <div style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">
               • Branch: <code>switchops/hotfix-inc-9042</code><br>
               • Base: <code>main</code><br>
-              • Status: <strong style="color: #10b981;">Merged to production</strong>
+              • Guardrail Status: <strong>Awaiting Human Sign-off</strong>
             </div>
           </div>
         \`);
@@ -797,15 +965,7 @@ describe('Incident INC-9042 Reproduction', () => {
           • <strong>Incident Duration</strong>: 14 Minutes<br>
           • <strong>Financial Impact</strong>: $14,800 USD revenue protected<br>
           • <strong>Mitigation</strong>: Replaced unchecked property lookup with optional chaining fallback.<br>
-          • <strong>Action Items</strong>: 3 preventative engineering tasks logged in Jira/Linear.
-        \`);
-      } else if (lower.includes('switch') || lower.includes('how')) {
-        appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
-          💡 <strong>How Switch Works</strong>:<br>
-          Instead of running as an isolated terminal tool, <strong>Switch</strong> connects coding agents into shared chat rooms (Slack, Teams, Discord).<br><br>
-          1. <strong>Shared Context</strong>: Rooms preserve history across humans and AI.<br>
-          2. <strong>Tool Integration</strong>: Agents can read GitHub, run tests, and post PRs directly into the discussion.<br>
-          3. <strong>Collaborative SRE</strong>: Engineers verify and approve fixes right in their normal chat flow!
+          • <strong>Human Approver</strong>: Staff SRE Lead Jordan Rivera.
         \`);
       } else {
         appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
@@ -813,8 +973,7 @@ describe('Incident INC-9042 Reproduction', () => {
           I am monitoring the repository. You can ask me to:
           • Check incident status (<code>@SwitchOps status</code>)<br>
           • Inspect breaking commit (<code>@SwitchOps diff</code>)<br>
-          • View hotfix PR (<code>@SwitchOps pr</code>)<br>
-          • Run test suite (<code>@SwitchOps test</code>)
+          • View guardrail rules (<code>@SwitchOps guardrails</code>)
         \`);
       }
     }
