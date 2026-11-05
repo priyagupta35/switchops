@@ -46,6 +46,15 @@ async function bootstrap() {
     }
   });
 
+  server.on('error', (err: any) => {
+    if (err.code === 'EADDRINUSE') {
+      console.log(`Port ${PORT} is currently in use. Trying port ${PORT + 1}...`);
+      server.listen(PORT + 1);
+    } else {
+      console.error('Server error:', err);
+    }
+  });
+
   server.listen(PORT, () => {
     console.log(`\n======================================================`);
     console.log(`⚡ SWITCHOPS WAR ROOM IS READY IN YOUR BROWSER!`);
