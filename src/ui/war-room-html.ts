@@ -665,6 +665,7 @@ export function getWarRoomHtml(): string {
 
     <!-- Quick Chips for Easy Testing -->
     <div class="quick-chips">
+      <span class="chip" onclick="quickAsk('@SwitchOps alert TechPulse RegisterRequest NPE')">💥 TechPulse 500 Outage</span>
       <span class="chip" onclick="quickAsk('@SwitchOps status')">📊 Check Status</span>
       <span class="chip" onclick="quickAsk('@SwitchOps diff')">🔍 Inspect Culprit Diff</span>
       <span class="chip" onclick="quickAsk('@SwitchOps test')">🧪 Run Reproduction Tests</span>
@@ -904,7 +905,39 @@ export function getWarRoomHtml(): string {
 
       const lower = val.toLowerCase();
 
-      if (lower.includes('status')) {
+      if (lower.includes('techpulse')) {
+        appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
+          <div>
+            <div style="font-weight: 700; color: #ef4444; margin-bottom: 6px;">🚨 P0 INCIDENT: TechPulse Registration API 500 Outage (INC-7701)</div>
+            <div><strong>Repository</strong>: <code>priyagupta35/techpulse</code> | <strong>Service</strong>: <code>TechPulse-AuthService</code></div>
+            <div><strong>Error</strong>: <code>NullPointerException: Cannot invoke getEmail() on null RegisterRequest</code></div>
+            
+            <div style="margin-top: 8px;">🎯 <strong>Root Cause Isolated</strong>:</div>
+            <div>• <strong>Suspect File</strong>: <code>src/main/java/com/techpulse/dto/RegisterRequest.java:7</code></div>
+            <div>• <strong>Diagnosis</strong>: <code>AuthController.register()</code> accessed payload fields without null validation when client sends empty JSON body.</div>
+            
+            <div class="code-box">
+--- a/src/main/java/com/techpulse/controller/AuthController.java<br>
++++ b/src/main/java/com/techpulse/controller/AuthController.java<br>
+@@ -23,3 +23,7 @@<br>
+-  User user = userService.register(request.getEmail(), request.getPassword());<br>
++  // SwitchOps Safe Fix: Add validation boundary<br>
++  if (request == null || request.getEmail() == null) {<br>
++    return ResponseEntity.badRequest().body("Invalid registration payload");<br>
++  }<br>
++  User user = userService.register(request.getEmail(), request.getPassword());
+            </div>
+
+            <div class="pr-card">
+              <span class="pr-title">⚡ PR #12: fix(auth): add null-safe validation to RegisterRequest payload [techpulse]</span>
+              <div style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">
+                Branch: <code>switchops/hotfix-techpulse-inc-7701</code> • Target: <code>priyagupta35/techpulse:main</code>
+              </div>
+            </div>
+            <div style="margin-top: 8px; color: #38bdf8; font-weight: 600;">👉 Ready to deploy to TechPulse. Requires SRE authorization.</div>
+          </div>
+        \`);
+      } else if (lower.includes('status')) {
         appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
           📊 <strong>Current Switch War Room Status</strong>:<br>
           • <strong>Room</strong>: <code>#incident-war-room (incident-war-room-402)</code><br>

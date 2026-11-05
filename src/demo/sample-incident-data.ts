@@ -28,4 +28,17 @@ export const SAMPLE_INCIDENTS: Record<string, IncidentAlert> = {
     source: 'DATADOG',
     environment: 'production',
   },
+  techpulse_register_crash: {
+    id: 'INC-7701',
+    title: 'TechPulse Registration API 500 Outage',
+    service: 'TechPulse-AuthService',
+    errorMessage: 'NullPointerException: Cannot invoke getEmail() on null RegisterRequest',
+    stackTrace: `java.lang.NullPointerException: Cannot invoke getEmail() on null RegisterRequest
+    at com.techpulse.service.UserService.registerUser(UserService.java:38)
+    at com.techpulse.controller.AuthController.register(AuthController.java:24)`,
+    severity: 'P0_CRITICAL',
+    timestamp: new Date().toISOString(),
+    source: 'SENTRY',
+    environment: 'production',
+  },
 };
