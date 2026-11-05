@@ -2,6 +2,7 @@ import http from 'http';
 import { SwitchBridge } from './core/switch-bridge.ts';
 import { SwitchOpsAgent } from './core/agent.ts';
 import { SAMPLE_INCIDENTS } from './demo/sample-incident-data.ts';
+import { getWarRoomHtml } from './ui/war-room-html.ts';
 
 const PORT = parseInt(process.env.PORT || '3000', 10);
 const ROOM_ID = process.env.SWITCH_ROOM_ID || 'incident-war-room-402';
@@ -12,9 +13,12 @@ async function bootstrap() {
   const bridge = new SwitchBridge(ROOM_ID, '#incident-war-room', 'slack');
   const agent = new SwitchOpsAgent(bridge);
 
-  // HTTP Webhook server for incoming monitoring alerts (Sentry, Datadog, PagerDuty)
+  // Web server serving both the Visual War Room UI and the monitoring webhook API
   const server = http.createServer(async (req, res) => {
-    if (req.method === 'POST' && req.url === '/webhook/alert') {
+    if (req.method === 'GET' && (req.url === '/' || req.url === '/room')) {
+      res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8' });
+      res.end(getWarRoomHtml());
+    } else if (req.method === 'POST' && req.url === '/webhook/alert') {
       let body = '';
       req.on('data', (chunk) => {
         body += chunk;
@@ -43,9 +47,10 @@ async function bootstrap() {
   });
 
   server.listen(PORT, () => {
-    console.log(`✓ SwitchOps Agent listening on port ${PORT}`);
-    console.log(`✓ Webhook endpoint available at http://localhost:${PORT}/webhook/alert`);
-    console.log(`✓ Run 'npm run demo' to view the interactive incident workflow simulation.`);
+    console.log(`\n======================================================`);
+    console.log(`⚡ SWITCHOPS WAR ROOM IS READY IN YOUR BROWSER!`);
+    console.log(`👉 Open: http://localhost:${PORT}`);
+    console.log(`======================================================\n`);
   });
 }
 
