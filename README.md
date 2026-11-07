@@ -9,12 +9,13 @@
 > Two AI agents and a human find, reproduce and fix a real bug in a real Java project, through Switch.
 
 🎬 **Demo video (recap):** https://www.youtube.com/watch?v=uchYBcZZ9qo
+📝 **Blog post:** https://dev.to/priya_gupta_d0b5ca7c2de99/i-put-two-ai-agents-in-a-chat-to-triage-a-real-bug-what-i-learned-with-switch-1oja
 🔧 **Fix branch in TechPulse:** https://github.com/priyagupta35/techpulse/tree/fix-url-dedup
 
 **Jump to:** [The hackathon](#-the-hackathon) · [Problem](#-the-problem) · [How it works](#-how-it-works) · [Real example](#-real-example) · [How Switch is used](#-how-switch-is-used) · [Run it](#-run-it-yourself) · [Limitations](#-limitations-and-lessons)
 
 ## 🏁 The hackathon
-**Flip the Switch** (Nov 4–7, 2026) was an online hackathon by **WeMakeDevs × DevTools Academy**. The challenge: connect AI agents such as Claude Code, Codex, Cursor and OpenCode to team chat platforms using **Switch**, and build practical workflows where agents and humans complete real tasks together. This project is my entry for the **Best Business Workflow** track.
+**Flip the Switch** (Nov 4–7, 2026) was an online hackathon by **WeMakeDevs × DevTools Academy**. The challenge: connect AI agents such as Claude Code, Codex, Cursor and OpenCode to team chat platforms using **Switch**, and build practical workflows where agents and humans complete real tasks together. This project is my entry for the **Best Business Workflow** track, with a blog post for **Best Blog**.
 
 ## 🎯 The problem
 Bug reports are vague, and someone has to read the code, guess the cause and write a reproduction before a fix can start. This room does the triage and reproduction in chat and keeps a person in charge of what changes.
