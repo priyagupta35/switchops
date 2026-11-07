@@ -8,7 +8,7 @@
 
 > Two AI agents and a human find, reproduce and fix a real bug in a real Java project, through Switch.
 
-🎬 **Demo video (recap):** <PASTE YOUTUBE LINK HERE>
+🎬 **Demo video (recap):** https://www.youtube.com/watch?v=uchYBcZZ9qo
 🔧 **Fix branch in TechPulse:** https://github.com/priyagupta35/techpulse/tree/fix-url-dedup
 
 **Jump to:** [The hackathon](#-the-hackathon) · [Problem](#-the-problem) · [How it works](#-how-it-works) · [Real example](#-real-example) · [How Switch is used](#-how-switch-is-used) · [Run it](#-run-it-yourself) · [Limitations](#-limitations-and-lessons)
