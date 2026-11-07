@@ -46,5 +46,3 @@ Bug reports are vague, and someone has to read the code, guess the cause and wri
 - Existing duplicate rows in a database would still need a one-off cleanup.
 - Git history of this repo contains an earlier, unrelated simulated prototype that is not part of this submission.
 
-## Screenshots
-See `/screenshots`.
