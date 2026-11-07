@@ -17,7 +17,15 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody(required = false) RegisterRequest request) {
-        // BUG: In commit 7b4f91e, unchecked dereference caused NullPointerException on null payload
+        // [OpenCode Safe Fix - Incident INC-7701]
+        // Guard against null payload or missing email
+        if (request == null || request.getEmail() == null || request.getEmail().isBlank()) {
+            return ResponseEntity.badRequest().body(java.util.Map.of(
+                "error", "VALIDATION_FAILED",
+                "message", "Registration payload and email cannot be null or empty"
+            ));
+        }
+
         var result = userService.registerUser(request.getEmail(), request.getPassword(), request.getFullName());
         return ResponseEntity.ok(result);
     }
