@@ -540,16 +540,19 @@ export function getWarRoomHtml(): string {
         <div class="dm-item">
           <div class="status-dot bot"></div>
           <span style="font-weight: 700; color: #e2e8f0;">⚡ SwitchOps [APP]</span>
+          <span style="font-size: 10px; background: rgba(14, 165, 233, 0.2); color: #38bdf8; padding: 1px 4px; border-radius: 3px; margin-left: 4px;">OpenCode</span>
         </div>
         <div class="dm-item">
           <div class="status-dot" style="background: #e01e5a;"></div>
           <span>Sentry Integration [APP]</span>
         </div>
 
-        <div style="margin-top: auto; padding: 14px 16px; border-top: 1px solid var(--sidebar-border); font-size: 11.5px; color: var(--sidebar-text);">
-          🛡️ <strong>Switch Bridge Active</strong><br>
-          Room ID: <code>incident-war-room-402</code><br>
-          Guardrail: Human Sign-off Required
+        <div style="margin-top: auto; padding: 14px 16px; border-top: 1px solid var(--sidebar-border); font-size: 11.5px; color: var(--sidebar-text); line-height: 1.5;">
+          🏆 <strong>Flip the Switch Hackathon</strong><br>
+          • <strong>Track 1</strong>: Best Business Workflow<br>
+          • <strong>Agent Harness</strong>: OpenCode<br>
+          • <strong>Platform</strong>: Switch AI Bridge<br>
+          • <strong>Guardrail</strong>: Human-in-the-Loop
         </div>
       </div>
     </div>
@@ -563,7 +566,7 @@ export function getWarRoomHtml(): string {
             🔒 #incident-war-room-402 ⭐️
           </div>
           <div class="channel-topic">
-            P0 Production Outage | Target Repo: <code>priyagupta35/techpulse</code> | On-Call Lead: @Jordan
+            <strong>Track 1: Best Business Workflow</strong> | Automated Incident Triage &amp; Remediation | Agent: OpenCode via Switch | Target: <code>priyagupta35/techpulse</code>
           </div>
         </div>
         <div class="header-pills">
@@ -707,7 +710,10 @@ export function getWarRoomHtml(): string {
       appendMessage('avatar-switch', '⚡', 'SwitchOps', true, \`
         <div class="slack-card">
           <div class="card-title">
-            <span>🎯 Root Cause Isolated (96% Confidence)</span>
+            <span>🎯 Automated Incident Triage &amp; Root Cause Analysis (96% Confidence)</span>
+          </div>
+          <div style="font-size: 11.5px; color: #38bdf8; margin-bottom: 6px; font-weight: 700;">
+            ⚙️ Executed via OpenCode Agent Harness on Switch Collaboration Bridge
           </div>
           <div style="line-height: 1.5; margin-bottom: 8px;">
             The failure was introduced in commit <code style="background: #111417; padding: 2px 6px; border-radius: 4px;">7b4f91e</code> by <strong>Alex Rivera</strong>.<br>
@@ -841,7 +847,7 @@ export function getWarRoomHtml(): string {
 
       // 2. Jordan mentions SwitchOps
       appendMessage('avatar-jordan', 'JR', 'Jordan Rivera', false,
-        '🚨 <strong>@channel</strong> Auth service failure rate is spiking to 15% in production right now. Sentry is firing P0 alerts on <code>RegisterRequest</code>. <strong>@SwitchOps</strong> please triage and isolate root cause.',
+        '🚨 <strong>@channel</strong> Auth service failure rate is spiking to 15% in production right now. Sentry is firing P0 alerts on <code>RegisterRequest</code>. <strong>@SwitchOps</strong> please execute <strong>automated incident triage</strong> and root cause analysis.',
         [{emoji: '👀', count: 3}]);
 
       typingBar.style.display = 'block';
