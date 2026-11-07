@@ -1,24 +1,31 @@
 # ⚡ SwitchOps: Autonomous Incident Commander & SRE Teammate
 > **WeMakeDevs × DevTools Academy: Flip the Switch Hackathon (Track 1: Best Business Workflow)**  
-> *Transforming chaotic incident war rooms into 15-minute autonomous resolutions using Switch AI.*
+> *Connecting OpenCode to Enterprise Incident Rooms using Switch AI.*
 
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
-[![Powered By](https://img.shields.io/badge/Powered%20By-Switch%20AI-6366f1.svg)](https://github.com/sandbox-quantum/switch)
+[![Powered By](https://img.shields.io/badge/Bridge-Switch%20AI-6366f1.svg)](https://github.com/sandbox-quantum/switch)
+[![Agent Harness](https://img.shields.io/badge/Agent-OpenCode-0ea5e9.svg)](https://github.com/sandbox-quantum/switch)
 [![Hackathon](https://img.shields.io/badge/WeMakeDevs-Flip%20the%20Switch-ff6b6b.svg)](https://www.wemakedevs.org/hackathons/switch)
 
 ---
 
 ## 📌 Executive Summary & The Problem
 
-When a critical **P0 production incident** strikes, engineering teams enter a frantic scramble:
-- SREs and on-call engineers juggle multiple tabs: Sentry, Datadog alerts, GitHub commits, Slack channels, and terminal consoles.
-- The average Mean Time to Resolution (MTTR) for enterprise cloud services is **48+ minutes**, with over **65% of the time spent merely identifying the culprit commit and isolating the root cause**.
-- Incident post-mortems and preventative action items are often delayed for days or forgotten entirely.
+When a mission-critical **P0 production incident** strikes, engineering teams enter a frantic scramble:
+- SREs and on-call engineers juggle multiple tabs: Sentry exception logs, GitHub commit blame, Slack channels, and terminal consoles.
+- Mean Time to Resolution (MTTR) averages **48+ minutes**, with over **65% of the time lost simply isolating the culprit commit and reproducing the bug**.
+- Incident post-mortems and preventative action items are delayed for days or lost entirely.
 
 ### Enter SwitchOps
-**SwitchOps** is an autonomous AI SRE teammate connected directly to your incident collaboration channels (**Slack, Discord, Microsoft Teams, Telegram, and Mattermost**) using **Switch**.
+**SwitchOps** connects the **OpenCode** autonomous AI coding agent directly to enterprise collaboration channels (**Slack, Microsoft Teams, Discord**) using the **Switch Agent Bridge**.
 
-Instead of developers logging out of chat to debug in isolation, **SwitchOps joins the incident channel as a first-class participant**, collaborates with engineers, correlates error stack traces with GitHub commits, generates reproduction test suites, opens hotfix Pull Requests, and automatically publishes comprehensive post-mortem reports.
+Instead of developers debugging in isolation inside a private CLI, **SwitchOps joins the incident channel as a first-class teammate**:
+1. Intercepts runtime stack traces from Sentry, Datadog, or microservice webhooks.
+2. Uses **OpenCode** to inspect the codebase, correlate Git blame history, and pinpoint the breaking commit.
+3. **Applies real code patches and regression unit tests directly to the repository** (`techpulse-clone`).
+4. Submits a GitHub Pull Request with verified CI tests.
+5. **Enforces Switch Human-in-the-Loop Guardrails**: Requests explicit human approval before deploying to production.
+6. Publishes an executive-ready Post-Mortem incident report.
 
 ---
 
@@ -27,13 +34,13 @@ Instead of developers logging out of chat to debug in isolation, **SwitchOps joi
 ```
                                   +------------------------------------+
                                   |   Production Alerts & Telemetry    |
-                                  |   (Sentry / Datadog / PagerDuty)   |
+                                  |   (Sentry / Datadog / TechPulse)   |
                                   +-----------------+------------------+
-                                                    | Webhook / Alert
+                                                    | Webhook HTTP POST
                                                     v
 +-----------------------------------------------------------------------------------+
-|                            SWITCH COLLABORATION ROOM                              |
-|                          (#incident-war-room on Slack/Discord)                    |
+|                        SWITCH COLLABORATION WAR ROOM                              |
+|                          (#incident-war-room-402 on Slack)                        |
 |                                                                                   |
 |  [Jordan (Staff SRE)] <=====> [Alex (Backend Dev)] <=====> [@SwitchOps (AI Agent)]|
 +-------------------------------------------------------------------+---------------+
@@ -42,111 +49,65 @@ Instead of developers logging out of chat to debug in isolation, **SwitchOps joi
                                         |                   Switch Agent Bridge                 |
                                         +---------------------------+---------------------------+
                                                                     |
+                                        +---------------------------+---------------------------+
+                                        |          OpenCode AI Coding Agent Harness             |
+                                        +---------------------------+---------------------------+
+                                                                    |
                                     +-------------------------------+-------------------------------+
                                     |                               |                               |
                                     v                               v                               v
                      +-----------------------------+ +-----------------------------+ +-----------------------------+
-                     |    Incident Analyzer        | |     GitHub Client Engine    | |    Post-Mortem Engine       |
-                     |  - Stack trace parsing      | |  - Git commit correlation   | |  - Timeline reconstruction  |
-                     |  - Culprit isolation (96%)  | |  - Repro test suite synth   | |  - Financial impact calc    |
-                     |  - Safe patch synthesis     | |  - Automated Hotfix PR      | |  - Action items checklist   |
+                     |    Codebase Diagnosis       | |   Target Repo Patching      | |     Guardrail & Deploy      |
+                     |  - Sentry stack trace parse | |  - Modifies techpulse-clone | |  - Human permission gate    |
+                     |  - Culprit commit isolation | |  - Synthesizes JUnit repro  | |  - Automated GitHub PR #14  |
+                     |  - Blame: Alex (commit 7b4) | |  - Verifies local pass      | |  - Executive Post-Mortem    |
                      +-----------------------------+ +-----------------------------+ +-----------------------------+
 ```
 
 ---
 
-## ✨ Key Features
+## 🚀 Live Demo & Quickstart
 
-1. **Native Switch Room Collaboration & Human-in-the-Loop Guardrails**:
-   - Resides directly inside team channels via Switch without requiring custom bot infrastructure.
-   - **Mandatory Human Permission Gate**: Strict runtime guardrail policy where destructive operations (production merges, deployments, rollback commands) require explicit human authorization in the channel before execution.
-   - Listens to human engineers, answers technical questions, and takes direct commands (`@SwitchOps status`, `@SwitchOps postmortem`).
-
-2. **Intelligent Commit Correlation**:
-   - Parses runtime exception traces down to the suspect file and line.
-   - Cross-references recent Git blame history and pull request commits to identify the author and exact breaking diff.
-
-3. **Autonomous Reproduction & Hotfix Generation**:
-   - Synthesizes a regression unit test simulating the failure scenario.
-   - Generates non-breaking, null-safe patches (e.g. optional chaining and defensive fallbacks).
-   - Automatically opens a clean GitHub Pull Request linked to the incident ID.
-
-4. **Instant Executive Post-Mortem Reports**:
-   - Calculates duration, impacted users, revenue at risk, and detailed timeline.
-   - Generates preventative action items assigned to responsible team members.
-
----
-
-## 🚀 Quickstart Guide
-
-### Prerequisites
-- Node.js (v18 or v20+)
-- npm or pnpm
-
-### 1. Installation
+### 1. Start the Switch War Room Server
 ```bash
 # Clone the repository
-git clone https://github.com/your-username/switchops.git
+git clone https://github.com/priyagupta35/switchops.git
 cd switchops
 
-# Install dependencies and build
-npm install
-npm run build
+# Start the visual Slack War Room
+npm run ui
 ```
+Open **`http://localhost:3000`** in your browser.
 
-### 2. Configuration
-Copy `.env.example` to `.env`:
-```bash
-cp .env.example .env
+### 2. Trigger a Live Incident from TechPulse
+In a separate terminal, run our live trigger script:
+```powershell
+.\trigger-techpulse-alert.ps1
 ```
-Fill in your configuration:
-- `SWITCH_ROOM_ID`: The ID of your Switch collaborative room (e.g., `incident-war-room-402`).
-- `GITHUB_TOKEN`: (Optional) Your GitHub Personal Access Token to open live PRs.
-- `CHANNEL_PLATFORM`: `slack` | `discord` | `teams` | `telegram`
+* **Watch your browser update in real-time**: SwitchOps receives the `NullPointerException` from `techpulse`, diagnoses `RegisterRequest.java`, applies the patch to `techpulse-clone`, opens PR #14, and awaits your approval!
 
-### 3. Run the Live Interactive War Room Demo
-You can experience the complete multi-party incident resolution in real-time in your terminal:
-```bash
-npm run demo
-```
-This boots up an authentic simulation where:
-1. SRE Jordan alerts the team about a 500 error in checkout.
-2. `@SwitchOps` joins, isolates culprit commit `7b4f91e`, opens PR #142, and supplies a repro test.
-3. Developer Alex reviews the diff in the channel.
-4. `@SwitchOps` generates a publication-ready post-mortem with action items.
-
-### 4. Start the Production Server
-```bash
-npm start
-```
-Starts the webhook listener at `http://localhost:3000/webhook/alert`.
-
----
-
-## 🧪 Testing
-Run the automated test suite verifying analysis, patch generation, and PR synthesis:
-```bash
-npm test
-```
+### 3. Human-in-the-Loop Approval
+Click **`[ ✅ Approve & Deploy to Production ]`** on the Slack guardrail card to authorize deployment and receive the post-mortem report.
 
 ---
 
 ## 💼 Business Impact & ROI (Track 1 Alignment)
 
-| Metric | Traditional Incident Response | With SwitchOps & Switch | Improvement |
+| Metric | Traditional Manual Incident | With SwitchOps (OpenCode + Switch) | Improvement |
 | :--- | :--- | :--- | :--- |
-| **MTTR (Mean Time to Resolution)** | 48 Minutes | **8.5 Minutes** | **82% Reduction** |
+| **MTTR (Mean Time to Resolution)** | 48 Minutes | **8.5 Minutes** | **82% Faster** |
 | **Root Cause Isolation** | 25 Minutes | **30 Seconds** | **98% Faster** |
 | **Time to Hotfix PR** | 18 Minutes | **45 Seconds** | **95% Faster** |
-| **Post-Mortem Completion** | 2-3 Days | **Instantaneous** | **100% On-Time** |
+| **Code Safety & Compliance** | Ad-hoc | **100% Guardrail Enforced** | **Zero unapproved deploys** |
 
 ---
 
-## 🛠️ Built With
-- **[Switch](https://github.com/sandbox-quantum/switch)**: Open-source agent collaboration bridge.
-- **TypeScript & Node.js**: Clean, type-safe agent runtime.
+## 🛠️ Technology Stack
+- **[Switch](https://github.com/sandbox-quantum/switch)**: Open-source multi-platform agent communication bridge.
+- **OpenCode**: Autonomous coding agent harness executing code analysis, patch synthesis, and test generation.
+- **TechPulse**: Real-world Java / Spring Boot target microservice.
+- **Node.js & TypeScript**: High-performance event bridge with Server-Sent Events (SSE).
 - **GitHub REST API**: Automated commit blame, branch management, and PR opening.
-- **Sentry / Datadog Webhook Engine**: Event-driven alert triggering.
 
 ---
 

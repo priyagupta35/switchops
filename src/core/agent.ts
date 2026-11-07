@@ -2,6 +2,7 @@ import { SwitchBridge } from './switch-bridge.ts';
 import { GitHubClient } from './github-client.ts';
 import { IncidentAnalyzer } from './incident-analyzer.ts';
 import { PostMortemGenerator } from './postmortem-generator.ts';
+import { OpenCodeEngine } from './opencode-engine.ts';
 import type { IncidentAlert, SwitchMessage } from './types.ts';
 
 export class SwitchOpsAgent {
@@ -9,12 +10,14 @@ export class SwitchOpsAgent {
   private github: GitHubClient;
   private analyzer: IncidentAnalyzer;
   private postmortemGenerator: PostMortemGenerator;
+  private openCode: OpenCodeEngine;
 
   constructor(bridge: SwitchBridge, github = new GitHubClient()) {
     this.bridge = bridge;
     this.github = github;
     this.analyzer = new IncidentAnalyzer();
     this.postmortemGenerator = new PostMortemGenerator();
+    this.openCode = new OpenCodeEngine();
 
     // Register the agent message listener on Switch
     this.bridge.onMessage((msg) => this.handleIncomingMessage(msg));
@@ -98,7 +101,11 @@ You can ask me to:
     const analysis = this.analyzer.analyze(alert, commits);
     this.bridge.updateState({ activeAnalysis: analysis, status: 'IDENTIFIED' });
 
-    // Step 3: Hotfix generation & automated PR
+    // Step 3: OpenCode Agent Harness applies real physical patch to the techpulse-clone repo
+    const openCodeResult = await this.openCode.applyHotfixToClone(alert.id);
+    console.log(`[OpenCode Harness] Hotfix applied to clone repo: ${openCodeResult.modifiedFile}`);
+
+    // Step 4: Hotfix generation & automated PR
     const branchName = `switchops/hotfix-${alert.id.toLowerCase()}`;
     const pr = await this.github.createHotfixPullRequest({
       incidentId: alert.id,
