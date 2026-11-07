@@ -4,548 +4,463 @@ export function getWarRoomHtml(): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SwitchOps War Room | Powered by Switch AI</title>
+  <title>Slack | #incident-war-room-402 | Acme Engineering</title>
   <style>
     :root {
-      --bg-dark: #121519;
-      --sidebar-bg: #0d0f12;
-      --card-bg: #1a1e24;
-      --card-border: #2a303c;
-      --accent-color: #6366f1;
-      --accent-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
-      --accent-glow: rgba(99, 102, 241, 0.35);
-      --text-main: #f1f5f9;
-      --text-dim: #94a3b8;
-      --danger: #ef4444;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --border-color: #242a35;
+      --slack-bg: #1a1d21;
+      --sidebar-bg: #19171d;
+      --sidebar-border: #35373b;
+      --sidebar-text: #bcabbc;
+      --sidebar-active: #1164a3;
+      --text-main: #d1d2d3;
+      --text-bold: #f8f8f8;
+      --text-dim: #abacad;
+      --border: #2c3136;
+      --card-bg: #222529;
+      --accent: #611f69;
+      --slack-blue: #1264a3;
+      --danger: #e01e5a;
+      --success: #2bac76;
+      --warning: #ecb22e;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      background: var(--bg-dark);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: var(--slack-bg);
       color: var(--text-main);
       display: flex;
+      flex-direction: column;
       height: 100vh;
       overflow: hidden;
-      transition: background 0.3s ease;
     }
-    /* Sidebar */
+
+    /* Top Global Slack Search Bar */
+    .top-nav {
+      height: 38px;
+      background: #121016;
+      border-bottom: 1px solid #28252d;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      flex-shrink: 0;
+    }
+    .top-search {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 6px;
+      padding: 4px 24px;
+      color: #fff;
+      font-size: 13px;
+      width: 440px;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+    }
+    .top-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      color: #abacad;
+    }
+    .profile-badge {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      background: #4a154b;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    /* Workspace Shell */
+    .workspace-body {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    /* Left Sidebar */
     .sidebar {
-      width: 290px;
+      width: 260px;
       background: var(--sidebar-bg);
-      border-right: 1px solid var(--border-color);
+      border-right: 1px solid var(--sidebar-border);
       display: flex;
       flex-direction: column;
       flex-shrink: 0;
     }
-    .sidebar-header {
-      padding: 16px 20px;
-      border-bottom: 1px solid var(--border-color);
+    .workspace-header {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--sidebar-border);
       display: flex;
       align-items: center;
-      gap: 12px;
+      justify-content: space-between;
+      cursor: pointer;
     }
-    .switch-logo {
-      width: 32px;
-      height: 32px;
-      background: var(--accent-gradient);
-      box-shadow: 0 0 14px var(--accent-glow);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 900;
-      color: #fff;
+    .workspace-name {
       font-size: 16px;
-      transition: all 0.3s ease;
+      font-weight: 800;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .org-title {
+    .sidebar-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 0;
+    }
+    .sidebar-group-title {
+      font-size: 12px;
       font-weight: 700;
-      font-size: 15px;
-      letter-spacing: -0.2px;
-    }
-    .sidebar-section {
-      padding: 16px 20px;
-    }
-    .section-title {
-      font-size: 11px;
+      color: var(--sidebar-text);
+      padding: 6px 16px;
       text-transform: uppercase;
-      letter-spacing: 0.8px;
-      color: var(--text-dim);
-      margin-bottom: 12px;
-      font-weight: 700;
+      letter-spacing: 0.5px;
     }
     .channel-item {
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 8px 10px;
-      border-radius: 6px;
-      color: var(--text-dim);
+      padding: 6px 16px;
+      color: #bcabbc;
       font-size: 14px;
       cursor: pointer;
-      margin-bottom: 4px;
-      transition: background 0.15s;
     }
-    .channel-item:hover {
-      background: rgba(255, 255, 255, 0.04);
-      color: #fff;
-    }
+    .channel-item:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
     .channel-item.active {
-      background: var(--card-bg);
-      border-left: 3px solid var(--accent-color);
-      color: #fff;
+      background: var(--sidebar-active);
+      color: #ffffff;
       font-weight: 600;
     }
-    .channel-item .badge {
-      margin-left: auto;
-      background: var(--danger);
-      color: #fff;
-      font-size: 10px;
-      font-weight: bold;
-      padding: 2px 7px;
-      border-radius: 10px;
-    }
-    .participant-item {
+    .dm-item {
       display: flex;
       align-items: center;
-      gap: 10px;
-      padding: 8px 10px;
-      border-radius: 6px;
-      font-size: 13px;
+      gap: 8px;
+      padding: 5px 16px;
+      color: #bcabbc;
+      font-size: 13.5px;
       cursor: pointer;
     }
-    .participant-item:hover { background: rgba(255, 255, 255, 0.03); }
-    .avatar {
-      width: 28px;
-      height: 28px;
+    .dm-item:hover { background: rgba(255, 255, 255, 0.05); color: #fff; }
+    .status-dot {
+      width: 9px;
+      height: 9px;
       border-radius: 50%;
-      background: #334155;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      position: relative;
-    }
-    .avatar.agent-avatar {
-      background: var(--accent-gradient);
-      box-shadow: 0 0 10px var(--accent-glow);
-    }
-    .online-dot {
-      position: absolute;
-      bottom: -1px;
-      right: -1px;
-      width: 8px;
-      height: 8px;
       background: var(--success);
-      border-radius: 50%;
-      border: 2px solid var(--sidebar-bg);
+    }
+    .status-dot.bot {
+      background: #611f69;
+      border: 1px solid #a855f7;
     }
 
-    /* Main War Room Area */
-    .chat-area {
+    /* Main Chat View */
+    .chat-container {
       flex: 1;
       display: flex;
       flex-direction: column;
-      background: var(--bg-dark);
-      position: relative;
+      background: var(--slack-bg);
+      overflow: hidden;
     }
-    .chat-header {
-      padding: 14px 24px;
-      border-bottom: 1px solid var(--border-color);
+
+    /* Channel Header */
+    .channel-header {
+      height: 52px;
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      background: var(--sidebar-bg);
+      background: var(--slack-bg);
     }
-    .channel-info h2 {
+    .channel-title-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+    .channel-title {
       font-size: 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    .room-badge {
-      background: #202630;
-      color: var(--text-dim);
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: 12px;
-      border: 1px solid var(--border-color);
-    }
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-    /* Theme Palette Selector */
-    .theme-picker {
+      font-weight: 800;
+      color: var(--text-bold);
       display: flex;
       align-items: center;
       gap: 6px;
-      background: #191e26;
-      border: 1px solid var(--border-color);
-      border-radius: 20px;
-      padding: 4px 8px;
     }
-    .theme-label {
-      font-size: 11px;
+    .channel-topic {
+      font-size: 12px;
       color: var(--text-dim);
-      font-weight: 600;
-      margin-right: 4px;
     }
-    .theme-dot {
-      width: 16px;
-      height: 16px;
-      border-radius: 50%;
-      cursor: pointer;
-      border: 2px solid transparent;
-      transition: transform 0.15s, border-color 0.15s;
+    .header-pills {
+      display: flex;
+      align-items: center;
+      gap: 8px;
     }
-    .theme-dot:hover { transform: scale(1.2); }
-    .theme-dot.active { border-color: #fff; transform: scale(1.15); }
-    .theme-indigo { background: #6366f1; }
-    .theme-cyan { background: #06b6d4; }
-    .theme-emerald { background: #10b981; }
-    .theme-rose { background: #f43f5e; }
-    .theme-amber { background: #f59e0b; }
-
-    .incident-status-pill {
-      background: rgba(239, 68, 68, 0.15);
+    .live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(224, 30, 90, 0.15);
       border: 1px solid var(--danger);
       color: #f87171;
-      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 14px;
+      font-size: 11px;
       font-weight: 700;
-      padding: 5px 12px;
-      border-radius: 16px;
-      display: flex;
-      align-items: center;
-      gap: 6px;
     }
     .pulse-dot {
-      width: 8px;
-      height: 8px;
+      width: 7px;
+      height: 7px;
       background: var(--danger);
       border-radius: 50%;
-      animation: pulse 1.5s infinite;
+      animation: pulse 1.4s infinite;
     }
     @keyframes pulse {
       0% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.4; transform: scale(1.3); }
+      50% { opacity: 0.3; transform: scale(1.3); }
       100% { opacity: 1; transform: scale(1); }
     }
-    .btn {
-      background: var(--accent-color);
+    .sim-button {
+      background: var(--slack-blue);
       color: white;
       border: none;
-      padding: 7px 14px;
+      padding: 6px 12px;
       border-radius: 6px;
-      font-size: 13px;
-      font-weight: 600;
+      font-size: 12px;
+      font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s;
       display: flex;
       align-items: center;
       gap: 6px;
     }
-    .btn:hover {
-      filter: brightness(1.1);
-      box-shadow: 0 0 10px var(--accent-glow);
-    }
+    .sim-button:hover { background: #0b4e82; }
 
-    /* Messages Stream */
-    .messages-container {
+    /* Bookmarks Bar */
+    .bookmarks-bar {
+      height: 32px;
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 12px;
+      color: var(--text-dim);
+      background: rgba(255, 255, 255, 0.015);
+    }
+    .bookmark-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--text-dim);
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .bookmark-link:hover { color: #fff; }
+
+    /* Message Feed */
+    .message-stream {
       flex: 1;
       overflow-y: auto;
-      padding: 24px;
+      padding: 16px 20px;
       display: flex;
       flex-direction: column;
-      gap: 18px;
+      gap: 16px;
     }
-    .message-row {
+    .slack-message {
       display: flex;
-      gap: 14px;
-      max-width: 960px;
-      animation: fadeIn 0.3s ease-out;
+      gap: 12px;
+      font-size: 14.5px;
+      line-height: 1.46;
+      animation: fadeIn 0.25s ease-out;
     }
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(6px); }
+      from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
-    .msg-avatar {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
-      background: #252b36;
+    .slack-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      flex-shrink: 0;
+      background: #2b3038;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
-      flex-shrink: 0;
+      font-weight: 700;
+      font-size: 14px;
+      color: white;
     }
-    .msg-avatar.agent-msg-avatar {
-      background: var(--accent-gradient);
-      box-shadow: 0 0 14px var(--accent-glow);
+    .avatar-sentry { background: #e01e5a; }
+    .avatar-switch {
+      background: linear-gradient(135deg, #611f69, #1264a3);
+      box-shadow: 0 0 10px rgba(97, 31, 105, 0.6);
     }
-    .msg-body { flex: 1; }
-    .msg-meta {
+    .avatar-jordan { background: #007a5a; }
+    .avatar-alex { background: #d97706; }
+
+    .msg-content { flex: 1; }
+    .msg-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 3px;
+    }
+    .msg-author {
+      font-weight: 800;
+      color: var(--text-bold);
+      font-size: 14px;
+    }
+    .bot-badge {
+      background: #383d44;
+      color: #cbd5e1;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 1px 4px;
+      border-radius: 3px;
+    }
+    .msg-timestamp {
+      font-size: 11.5px;
+      color: var(--text-dim);
+    }
+
+    /* Slack Block Kit Card */
+    .slack-card {
+      margin-top: 6px;
+      background: var(--card-bg);
+      border-left: 4px solid var(--slack-blue);
+      border-radius: 0 6px 6px 0;
+      padding: 12px 16px;
+      font-size: 13.5px;
+    }
+    .slack-card.sentry-card {
+      border-left-color: var(--danger);
+      background: #231c21;
+    }
+    .slack-card.guardrail-card {
+      border-left-color: var(--warning);
+      background: #26231e;
+    }
+    .slack-card.success-card {
+      border-left-color: var(--success);
+      background: #1c2621;
+    }
+
+    .card-title {
+      font-weight: 800;
+      font-size: 14px;
+      color: #fff;
       display: flex;
       align-items: center;
       gap: 8px;
       margin-bottom: 6px;
     }
-    .msg-author { font-weight: 700; font-size: 14px; }
-    .msg-role-badge {
-      background: #252b36;
-      color: #cbd5e1;
-      font-size: 10px;
-      padding: 2px 6px;
+    .code-snippet {
+      background: #121417;
+      border: 1px solid #2e343b;
+      border-radius: 5px;
+      padding: 8px 12px;
+      font-family: 'Consolas', 'Monaco', monospace;
+      font-size: 12.5px;
+      color: #e2e8f0;
+      margin: 8px 0;
+      overflow-x: auto;
+    }
+    .tags-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 11px;
+    }
+    .slack-tag {
+      background: #181b1f;
+      border: 1px solid #2f343b;
+      color: #94a3b8;
+      padding: 2px 7px;
       border-radius: 4px;
     }
-    .msg-role-badge.agent {
-      background: rgba(99, 102, 241, 0.2);
-      color: var(--accent-color);
-      border: 1px solid var(--accent-color);
-    }
-    .msg-time { font-size: 11px; color: var(--text-dim); }
-    .msg-bubble {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      padding: 14px 16px;
-      font-size: 14px;
-      line-height: 1.6;
-    }
-    .msg-bubble.alert-bubble {
-      border-left: 4px solid var(--danger);
-      background: rgba(239, 68, 68, 0.06);
-    }
-    .msg-bubble.agent-bubble {
-      border-left: 4px solid var(--accent-color);
-      background: rgba(99, 102, 241, 0.05);
-    }
-    .code-box {
-      background: #0d1014;
-      border: 1px solid var(--card-border);
-      border-radius: 6px;
-      padding: 10px 14px;
-      font-family: Consolas, Monaco, monospace;
-      font-size: 13px;
-      color: #f1f5f9;
-      margin: 10px 0;
-      overflow-x: auto;
-    }
-    .pr-card {
+    .slack-tag strong { color: #f1f5f9; }
+
+    /* Action Buttons in Block Kit */
+    .slack-btn-row {
+      display: flex;
+      gap: 8px;
       margin-top: 10px;
-      background: #0f1318;
-      border: 1px solid var(--card-border);
-      border-radius: 8px;
-      padding: 14px;
     }
-    .pr-title {
-      font-size: 14px;
+    .slack-btn {
+      padding: 6px 14px;
+      border-radius: 4px;
+      font-size: 13px;
       font-weight: 700;
-      color: #38bdf8;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-    .pr-tag {
-      background: #10b981;
-      color: white;
-      font-size: 11px;
-      padding: 2px 8px;
-      border-radius: 12px;
-      font-weight: 600;
-    }
-
-    /* Human-in-the-Loop Permission Guardrail Card */
-    .guardrail-card {
-      margin-top: 14px;
-      background: #181d24;
-      border: 1.5px solid var(--warning);
-      border-radius: 8px;
-      padding: 14px 16px;
-      box-shadow: 0 0 16px rgba(245, 158, 11, 0.15);
-      animation: fadeIn 0.4s ease;
-    }
-    .guardrail-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 8px;
-    }
-    .guardrail-title {
-      font-weight: 800;
-      font-size: 13px;
-      color: var(--warning);
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      letter-spacing: 0.5px;
-    }
-    .guardrail-badge {
-      background: rgba(245, 158, 11, 0.18);
-      border: 1px solid var(--warning);
-      color: #fbbf24;
-      font-size: 10px;
-      font-weight: bold;
-      padding: 2px 8px;
-      border-radius: 10px;
-    }
-    .guardrail-desc {
-      font-size: 13px;
-      color: #cbd5e1;
-      margin-bottom: 10px;
-      line-height: 1.5;
-    }
-    .guardrail-meta {
-      display: flex;
-      gap: 16px;
-      font-size: 12px;
-      color: var(--text-dim);
-      background: #101317;
-      padding: 8px 12px;
-      border-radius: 6px;
-      margin-bottom: 12px;
-    }
-    .guardrail-meta strong { color: #f1f5f9; }
-    .guardrail-actions {
-      display: flex;
-      gap: 10px;
-    }
-    .btn-approve {
-      background: #10b981;
-      color: white;
       border: none;
-      padding: 8px 16px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 700;
       cursor: pointer;
-      transition: all 0.2s;
-    }
-    .btn-approve:hover {
-      background: #059669;
-      box-shadow: 0 0 12px rgba(16, 185, 129, 0.4);
-    }
-    .btn-reject {
-      background: #334155;
-      color: #cbd5e1;
-      border: 1px solid var(--border-color);
-      padding: 8px 14px;
-      border-radius: 6px;
-      font-size: 13px;
-      font-weight: 600;
-      cursor: pointer;
-    }
-    .btn-reject:hover { background: #475569; }
-    .guardrail-status-banner {
-      padding: 8px 12px;
-      border-radius: 6px;
-      font-size: 12px;
-      font-weight: 700;
       display: flex;
       align-items: center;
       gap: 6px;
     }
-    .status-approved {
-      background: rgba(16, 185, 129, 0.15);
-      border: 1px solid #10b981;
-      color: #34d399;
+    .btn-approve-slack {
+      background: #007a5a;
+      color: white;
     }
-    .status-rejected {
-      background: rgba(239, 68, 68, 0.15);
-      border: 1px solid #ef4444;
-      color: #f87171;
+    .btn-approve-slack:hover { background: #148565; }
+    .btn-deny-slack {
+      background: #2c3136;
+      color: #d1d2d3;
+      border: 1px solid #444c56;
     }
+    .btn-deny-slack:hover { background: #3b424b; }
 
-    .metric-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin: 12px 0;
-    }
-    .metric-card {
-      background: #151921;
-      border: 1px solid var(--card-border);
-      border-radius: 6px;
-      padding: 10px;
-      text-align: center;
-    }
-    .metric-value {
-      font-size: 18px;
-      font-weight: 800;
-      color: var(--accent-color);
-    }
-    .metric-label {
-      font-size: 11px;
-      color: var(--text-dim);
-      margin-top: 2px;
-    }
-
-    /* Typing Indicator */
-    .typing-indicator {
-      display: none;
-      align-items: center;
+    /* Emoji Reactions */
+    .slack-reactions {
+      display: flex;
       gap: 6px;
-      color: var(--text-dim);
-      font-size: 12px;
-      padding: 6px 24px;
+      margin-top: 6px;
     }
-    .typing-dots span {
-      display: inline-block;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: var(--accent-color);
-      animation: blink 1.4s infinite both;
-    }
-    .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
-    .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes blink { 0%, 80%, 100% { opacity: 0; } 40% { opacity: 1; } }
-
-    /* Quick Prompt Chips */
-    .quick-chips {
+    .reaction-pill {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 12px;
+      padding: 2px 7px;
+      font-size: 11.5px;
       display: flex;
-      gap: 8px;
-      padding: 8px 24px 0 24px;
-      background: var(--sidebar-bg);
-      overflow-x: auto;
-    }
-    .chip {
-      background: #1a202c;
-      border: 1px solid var(--border-color);
-      color: var(--text-dim);
-      font-size: 12px;
-      padding: 4px 10px;
-      border-radius: 14px;
+      align-items: center;
+      gap: 4px;
       cursor: pointer;
-      white-space: nowrap;
-      transition: all 0.15s;
     }
-    .chip:hover {
-      background: var(--accent-color);
-      color: #fff;
-      border-color: var(--accent-color);
-    }
+    .reaction-pill:hover { background: rgba(255, 255, 255, 0.12); }
 
-    /* Input Footer */
-    .chat-footer {
-      padding: 12px 24px 16px 24px;
-      background: var(--sidebar-bg);
-      border-top: 1px solid var(--border-color);
+    /* Slack Message Input Box */
+    .slack-footer {
+      padding: 12px 20px 20px 20px;
+      background: var(--slack-bg);
     }
-    .input-wrapper {
-      display: flex;
-      gap: 10px;
-      background: #14171d;
-      border: 1px solid var(--border-color);
+    .input-box-container {
+      background: #222529;
+      border: 1px solid #474f59;
       border-radius: 8px;
-      padding: 8px 14px;
+      overflow: hidden;
     }
-    .input-wrapper input {
+    .input-toolbar {
+      padding: 4px 10px;
+      background: #1b1e22;
+      border-bottom: 1px solid #2e343b;
+      display: flex;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--text-dim);
+    }
+    .input-toolbar span { cursor: pointer; }
+    .input-toolbar span:hover { color: #fff; }
+    .input-row {
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+    }
+    .input-row input {
       flex: 1;
       background: transparent;
       border: none;
@@ -553,462 +468,416 @@ export function getWarRoomHtml(): string {
       color: #fff;
       font-size: 14px;
     }
+    .send-btn {
+      background: #007a5a;
+      border: none;
+      color: white;
+      padding: 4px 10px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .send-btn:hover { background: #148565; }
+
+    /* Typing Bar */
+    .typing-bar {
+      height: 18px;
+      padding: 0 20px;
+      font-size: 11.5px;
+      color: var(--text-dim);
+      display: none;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Sidebar -->
-  <div class="sidebar">
-    <div class="sidebar-header">
-      <div class="switch-logo" id="headerLogo">⚡</div>
-      <div>
-        <div class="org-title">Acme Engineering</div>
-        <div style="font-size: 11px; color: var(--text-dim);">Switch Room Bridge v1.0</div>
-      </div>
+  <!-- Top Global Slack Search Bar -->
+  <div class="top-nav">
+    <div style="font-weight: 800; font-size: 13px; color: #fff; display: flex; align-items: center; gap: 8px;">
+      <span style="color: #e01e5a;">●</span> Acme Engineering War Room
     </div>
-
-    <div class="sidebar-section">
-      <div class="section-title">Incident Rooms</div>
-      <div class="channel-item"># general</div>
-      <div class="channel-item"># alerts-prod</div>
-      <div class="channel-item active">
-        <span># incident-war-room</span>
-        <span class="badge">P0</span>
-      </div>
-      <div class="channel-item"># sre-triage</div>
+    <div class="top-search">
+      🔍 Search messages, files, or incidents in #incident-war-room-402 (Ctrl + K)
     </div>
-
-    <div class="sidebar-section">
-      <div class="section-title">Active Teammates (Switch)</div>
-      <div class="participant-item">
-        <div class="avatar agent-avatar">🤖<div class="online-dot"></div></div>
-        <div>
-          <div style="font-weight: 600; color: var(--accent-color);">SwitchOps</div>
-          <div style="font-size: 10px; color: var(--text-dim);">AI Incident Commander</div>
-        </div>
-      </div>
-      <div class="participant-item">
-        <div class="avatar">👨‍💻<div class="online-dot"></div></div>
-        <div>
-          <div style="font-weight: 600;">Jordan Rivera</div>
-          <div style="font-size: 10px; color: var(--text-dim);">Staff SRE Lead</div>
-        </div>
-      </div>
-      <div class="participant-item">
-        <div class="avatar">👨‍🔧<div class="online-dot"></div></div>
-        <div>
-          <div style="font-weight: 600;">Alex Rivera</div>
-          <div style="font-size: 10px; color: var(--text-dim);">Senior Backend Dev</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="sidebar-section" style="margin-top: auto; border-top: 1px solid var(--border-color);">
-      <div style="font-size: 11px; color: var(--text-dim); line-height: 1.5;">
-        🛡️ <strong>Human-in-the-Loop</strong><br>
-        Autonomous agent guardrails active.<br>
-        Human permission required for production merges.
-      </div>
+    <div class="top-actions">
+      <span>🔔 Alerts: ON</span>
+      <div class="profile-badge">JR</div>
     </div>
   </div>
 
-  <!-- Chat Area -->
-  <div class="chat-area">
-    <div class="chat-header">
-      <div class="channel-info">
-        <h2>#incident-war-room <span class="room-badge">Switch Room ID: incident-war-room-402</span></h2>
-        <div style="font-size: 12px; color: var(--text-dim); margin-top: 3px;">
-          Autonomous incident triage & collaborative remediation powered by Switch AI
+  <div class="workspace-body">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="workspace-header">
+        <div class="workspace-name">
+          Acme Corp ▾
         </div>
+        <span style="font-size: 11px; background: #35373b; padding: 2px 6px; border-radius: 4px; color: #fff;">PROD</span>
       </div>
-      <div class="header-actions">
-        <!-- Live Color / Theme Palette -->
-        <div class="theme-picker">
-          <span class="theme-label">Theme:</span>
-          <div class="theme-dot theme-indigo active" onclick="setTheme('indigo')" title="Indigo Violet"></div>
-          <div class="theme-dot theme-cyan" onclick="setTheme('cyan')" title="Cyber Cyan"></div>
-          <div class="theme-dot theme-emerald" onclick="setTheme('emerald')" title="Emerald Green"></div>
-          <div class="theme-dot theme-rose" onclick="setTheme('rose')" title="Neon Rose"></div>
-          <div class="theme-dot theme-amber" onclick="setTheme('amber')" title="Solar Amber"></div>
+
+      <div class="sidebar-content">
+        <div class="sidebar-group-title">Channels</div>
+        <div class="channel-item"># general</div>
+        <div class="channel-item"># techpulse-dev</div>
+        <div class="channel-item"># deployments</div>
+        <div class="channel-item">
+          # alerts-critical
+          <span style="margin-left: auto; background: var(--danger); color: white; border-radius: 10px; font-size: 10px; padding: 1px 6px; font-weight: bold;">3</span>
+        </div>
+        <div class="channel-item active">
+          🔒 #incident-war-room-402
         </div>
 
-        <div class="incident-status-pill" id="statusPill">
-          <div class="pulse-dot"></div>
-          P0 CRITICAL OUTAGE
+        <div class="sidebar-group-title" style="margin-top: 14px;">War Room Responders</div>
+        <div class="dm-item">
+          <div class="status-dot"></div>
+          <span>Jordan Rivera (Staff SRE Lead)</span>
         </div>
-        <button class="btn" onclick="startIncidentSimulation()">▶️ Run Live Simulation</button>
+        <div class="dm-item">
+          <div class="status-dot"></div>
+          <span>Alex Rivera (Senior Backend)</span>
+        </div>
+        <div class="dm-item">
+          <div class="status-dot bot"></div>
+          <span style="font-weight: 700; color: #e2e8f0;">⚡ SwitchOps [APP]</span>
+        </div>
+        <div class="dm-item">
+          <div class="status-dot" style="background: #e01e5a;"></div>
+          <span>Sentry Integration [APP]</span>
+        </div>
+
+        <div style="margin-top: auto; padding: 14px 16px; border-top: 1px solid var(--sidebar-border); font-size: 11.5px; color: var(--sidebar-text);">
+          🛡️ <strong>Switch Bridge Active</strong><br>
+          Room ID: <code>incident-war-room-402</code><br>
+          Guardrail: Human Sign-off Required
+        </div>
       </div>
     </div>
 
-    <div class="messages-container" id="messagesContainer">
-      <div class="message-row">
-        <div class="msg-avatar agent-msg-avatar">⚡</div>
-        <div class="msg-body">
-          <div class="msg-meta">
-            <span class="msg-author">SwitchOps</span>
-            <span class="msg-role-badge agent">SWITCH AI AGENT</span>
-            <span class="msg-time">Just now</span>
+    <!-- Main Chat Container -->
+    <div class="chat-container">
+      <!-- Channel Header -->
+      <div class="channel-header">
+        <div class="channel-title-wrap">
+          <div class="channel-title">
+            🔒 #incident-war-room-402 ⭐️
           </div>
-          <div class="msg-bubble agent-bubble">
-            👋 Welcome to the <strong>Switch Incident War Room</strong>! I am <strong>@SwitchOps</strong>, your autonomous SRE teammate.<br><br>
-            🔒 <strong>Safety Guardrails Active</strong>: I will never deploy or merge to production without explicit human permission in this room.<br>
-            • Click <strong>"▶️ Run Live Simulation"</strong> above to see the full incident response, root cause analysis, and the <strong>Human Permission Gate</strong> in action!
+          <div class="channel-topic">
+            P0 Production Outage | Target Repo: <code>priyagupta35/techpulse</code> | On-Call Lead: @Jordan
+          </div>
+        </div>
+        <div class="header-pills">
+          <div class="live-indicator" id="livePill">
+            <div class="pulse-dot"></div>
+            P0 CRITICAL OUTAGE
+          </div>
+          <button class="sim-button" onclick="triggerIncidentSimulation()">
+            ▶️ Run Incident Simulation
+          </button>
+        </div>
+      </div>
+
+      <!-- Bookmarks Bar -->
+      <div class="bookmarks-bar">
+        <span class="bookmark-link">📋 <strong>Incident Canvas</strong></span>
+        <span>|</span>
+        <span class="bookmark-link">📊 Datadog Telemetry</span>
+        <span>|</span>
+        <span class="bookmark-link">🐙 GitHub: priyagupta35/techpulse</span>
+        <span>|</span>
+        <span class="bookmark-link">📖 SRE Runbook: Triage-v4</span>
+      </div>
+
+      <!-- Message Stream -->
+      <div class="message-stream" id="messageStream">
+        <!-- Initial Message -->
+        <div class="slack-message">
+          <div class="slack-avatar avatar-switch">⚡</div>
+          <div class="msg-content">
+            <div class="msg-header">
+              <span class="msg-author">SwitchOps</span>
+              <span class="bot-badge">APP</span>
+              <span class="msg-timestamp">Today at 11:00 AM</span>
+            </div>
+            <div>
+              Connected to channel <strong>#incident-war-room-402</strong> via the <strong>Switch Agent Bridge</strong>.<br>
+              Monitoring live Sentry, Datadog & TechPulse webhook feeds. Standing by for incident correlation.
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="typing-indicator" id="typingIndicator">
-      <span style="font-weight: 600; color: var(--accent-color);">@SwitchOps</span> is typing
-      <div class="typing-dots"><span></span><span></span><span></span></div>
-    </div>
+      <!-- Typing indicator -->
+      <div class="typing-bar" id="typingBar">
+        <strong>SwitchOps [APP]</strong> is correlating git blame and drafting hotfix...
+      </div>
 
-    <!-- Quick Chips for Easy Testing -->
-    <div class="quick-chips">
-      <span class="chip" onclick="quickAsk('@SwitchOps alert TechPulse RegisterRequest NPE')">💥 TechPulse 500 Outage</span>
-      <span class="chip" onclick="quickAsk('@SwitchOps status')">📊 Check Status</span>
-      <span class="chip" onclick="quickAsk('@SwitchOps diff')">🔍 Inspect Culprit Diff</span>
-      <span class="chip" onclick="quickAsk('@SwitchOps test')">🧪 Run Reproduction Tests</span>
-      <span class="chip" onclick="quickAsk('@SwitchOps pr')">⚡ View GitHub PR</span>
-      <span class="chip" onclick="quickAsk('@SwitchOps postmortem')">📄 Generate Post-Mortem</span>
-      <span class="chip" onclick="quickAsk('Does Switch require human approval before deployment?')">🛡️ Guardrail Rules</span>
-    </div>
-
-    <div class="chat-footer">
-      <div class="input-wrapper">
-        <input type="text" id="chatInput" placeholder="Message #incident-war-room or ask @SwitchOps anything..." onkeydown="handleKey(event)">
-        <button class="btn" onclick="sendCustomMessage()">Send</button>
+      <!-- Footer Message Input -->
+      <div class="slack-footer">
+        <div class="input-box-container">
+          <div class="input-toolbar">
+            <span><strong>B</strong></span>
+            <span><em>I</em></span>
+            <span>&lt;&gt;</span>
+            <span>🔗</span>
+            <span>@ Mention</span>
+          </div>
+          <div class="input-row">
+            <input type="text" id="slackInput" placeholder="Message #incident-war-room-402 or ask @SwitchOps anything..." onkeydown="handleInputKey(event)">
+            <button class="send-btn" onclick="sendHumanMessage()">Send</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
   <script>
-    const messagesContainer = document.getElementById('messagesContainer');
-    const typingIndicator = document.getElementById('typingIndicator');
-    let hasApprovedDeploy = false;
+    const stream = document.getElementById('messageStream');
+    const typingBar = document.getElementById('typingBar');
 
-    // Theme switching logic
-    const themes = {
-      indigo: { accent: '#6366f1', gradient: 'linear-gradient(135deg, #6366f1, #8b5cf6)', glow: 'rgba(99, 102, 241, 0.35)' },
-      cyan: { accent: '#06b6d4', gradient: 'linear-gradient(135deg, #06b6d4, #3b82f6)', glow: 'rgba(6, 182, 212, 0.35)' },
-      emerald: { accent: '#10b981', gradient: 'linear-gradient(135deg, #10b981, #059669)', glow: 'rgba(16, 185, 129, 0.35)' },
-      rose: { accent: '#f43f5e', gradient: 'linear-gradient(135deg, #f43f5e, #e11d48)', glow: 'rgba(244, 63, 94, 0.35)' },
-      amber: { accent: '#f59e0b', gradient: 'linear-gradient(135deg, #f59e0b, #d97706)', glow: 'rgba(245, 158, 11, 0.35)' }
-    };
+    function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-    function setTheme(themeName) {
-      const t = themes[themeName];
-      if (!t) return;
-      document.documentElement.style.setProperty('--accent-color', t.accent);
-      document.documentElement.style.setProperty('--accent-gradient', t.gradient);
-      document.documentElement.style.setProperty('--accent-glow', t.glow);
+    // Connect to Server-Sent Events (SSE) for LIVE REAL-WORLD ALERTS from TechPulse!
+    try {
+      const evtSource = new EventSource('/api/events');
+      evtSource.onmessage = (e) => {
+        try {
+          const payload = JSON.parse(e.data);
+          if (payload.type === 'ALERT_RECEIVED') {
+            displayLiveAlertFromTechPulse(payload.data);
+          } else if (payload.type === 'ANALYSIS_COMPLETE') {
+            displayLiveSwitchOpsTriage(payload.data);
+          }
+        } catch(err) {}
+      };
+    } catch(err) {}
 
-      document.querySelectorAll('.theme-dot').forEach(d => d.classList.remove('active'));
-      const activeDot = document.querySelector('.theme-' + themeName);
-      if (activeDot) activeDot.classList.add('active');
-    }
+    function appendMessage(avatarClass, avatarText, author, isBot, htmlContent, reactions = []) {
+      const div = document.createElement('div');
+      div.className = 'slack-message';
 
-    function sleep(ms) { return new Promise(resolve => setTimeout(resolve, ms)); }
+      let rxHtml = '';
+      if (reactions.length > 0) {
+        rxHtml = '<div class="slack-reactions">';
+        reactions.forEach(rx => {
+          rxHtml += \`<div class="reaction-pill">\${rx.emoji} \${rx.count}</div>\`;
+        });
+        rxHtml += '</div>';
+      }
 
-    function appendMessage(avatar, name, role, isAgent, content, isAlert = false) {
-      const row = document.createElement('div');
-      row.className = 'message-row';
-      const roleClass = isAgent ? 'msg-role-badge agent' : 'msg-role-badge';
-      const bubbleClass = isAlert ? 'msg-bubble alert-bubble' : (isAgent ? 'msg-bubble agent-bubble' : 'msg-bubble');
-      const avatarClass = isAgent ? 'msg-avatar agent-msg-avatar' : 'msg-avatar';
-
-      row.innerHTML = \`
-        <div class="\${avatarClass}">\${avatar}</div>
-        <div class="msg-body">
-          <div class="msg-meta">
-            <span class="msg-author">\${name}</span>
-            <span class="\${roleClass}">\${role}</span>
-            <span class="msg-time">\${new Date().toLocaleTimeString()}</span>
+      div.innerHTML = \`
+        <div class="slack-avatar \${avatarClass}">\${avatarText}</div>
+        <div class="msg-content">
+          <div class="msg-header">
+            <span class="msg-author">\${author}</span>
+            \${isBot ? '<span class="bot-badge">APP</span>' : ''}
+            <span class="msg-timestamp">Today at \${new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
           </div>
-          <div class="\${bubbleClass}">\${content}</div>
+          <div>\${htmlContent}</div>
+          \${rxHtml}
         </div>
       \`;
-      messagesContainer.appendChild(row);
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      stream.appendChild(div);
+      stream.scrollTop = stream.scrollHeight;
     }
 
-    async function startIncidentSimulation() {
-      // 1. SRE Jordan sounds alarm
-      appendMessage('👨‍💻', 'Jordan Rivera', 'Staff SRE Lead', false,
-        '🚨 <strong>@channel</strong> Checkout failure rate is spiking to 15% right now in production! Sentry is blowing up with 500s. <strong>@SwitchOps</strong> investigate!', true);
+    // Displays an authentic Sentry Bot Alert (works for both simulation and real TechPulse HTTP alerts)
+    function displayLiveAlertFromTechPulse(alert) {
+      appendMessage('avatar-sentry', 'S', 'Sentry Integration', true, \`
+        <div class="slack-card sentry-card">
+          <div class="card-title">
+            <span style="color: #e01e5a;">⚠️ Sentry Issue Alert</span>: \${alert.title}
+          </div>
+          <div style="font-size: 13px; color: #f87171; font-weight: 700; margin-bottom: 6px;">
+            \${alert.errorMessage}
+          </div>
+          <div class="code-snippet">\${alert.stackTrace}</div>
+          <div class="tags-row">
+            <span class="slack-tag">service: <strong>\${alert.service || 'techpulse-auth'}</strong></span>
+            <span class="slack-tag">repo: <strong>priyagupta35/techpulse</strong></span>
+            <span class="slack-tag">severity: <strong>P0_CRITICAL</strong></span>
+            <span class="slack-tag">handled: <strong>false</strong></span>
+          </div>
+        </div>
+      \`, [{emoji: '🔥', count: 3}, {emoji: '👀', count: 2}]);
+    }
 
-      // Typing indicator
-      typingIndicator.style.display = 'flex';
-      await sleep(1800);
-      typingIndicator.style.display = 'none';
-
-      // 2. SwitchOps initial diagnosis, PR & HUMAN PERMISSION GATE
-      appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
-        <div>
-          <div style="font-weight: 700; color: #ef4444; margin-bottom: 6px;">🚨 P0 INCIDENT DETECTED by Sentry (INC-9042)</div>
-          <div><strong>Service</strong>: <code>PaymentProcessorService</code> | <strong>Error</strong>: <code>TypeError: Cannot read properties of undefined (reading 'tier')</code></div>
-          <div style="margin-top: 8px;">🎯 <strong>Root Cause Isolated (96% Confidence)</strong>:</div>
-          <div>• <strong>Suspect File</strong>: <code>src/services/PaymentProcessor.ts:44</code></div>
-          <div>• <strong>Breaking Commit</strong>: <code>7b4f91e</code> by <em>Alex Rivera &lt;alex@acmepay.io&gt;</em></div>
-          <div>• <strong>Explanation</strong>: Direct property access on <code>customer.subscription.tier</code> fails for guest checkouts without active subscriptions.</div>
-          
-          <div class="code-box">
---- a/src/services/PaymentProcessor.ts<br>
-+++ b/src/services/PaymentProcessor.ts<br>
-@@ -44,3 +44,4 @@<br>
--  const userTier = customer.subscription.tier;<br>
-+  // SwitchOps Safe Fix: Optional chaining with default fallback<br>
-+  const userTier = customer?.subscription?.tier ?? 'STANDARD';
+    // Displays authentic SwitchOps response with Guardrail card
+    function displayLiveSwitchOpsTriage(data) {
+      appendMessage('avatar-switch', '⚡', 'SwitchOps', true, \`
+        <div class="slack-card">
+          <div class="card-title">
+            <span>🎯 Root Cause Isolated (96% Confidence)</span>
+          </div>
+          <div style="line-height: 1.5; margin-bottom: 8px;">
+            The failure was introduced in commit <code style="background: #111417; padding: 2px 6px; border-radius: 4px;">7b4f91e</code> by <strong>Alex Rivera</strong>.<br>
+            Direct access on null <code>RegisterRequest</code> payload throws <code>NullPointerException</code> on empty request bodies.
           </div>
 
-          <div class="pr-card">
+          <div class="code-snippet">
+--- a/src/main/java/com/techpulse/controller/AuthController.java
++++ b/src/main/java/com/techpulse/controller/AuthController.java
+@@ -24,4 +24,8 @@ public ResponseEntity&lt;?&gt; register(@RequestBody RegisterRequest request) {
+-    User user = userService.register(request.getEmail(), request.getPassword());
++    // SwitchOps Safe Fix: Add null-safe validation boundary
++    if (request == null || request.getEmail() == null) {
++        return ResponseEntity.badRequest().body("Invalid registration payload");
++    }
++    User user = userService.register(request.getEmail(), request.getPassword());
+          </div>
+
+          <!-- Pull Request Card -->
+          <div style="background: #161a20; border: 1px solid #30363d; border-radius: 6px; padding: 10px; margin-top: 8px;">
             <div style="display: flex; justify-content: space-between; align-items: center;">
-              <span class="pr-title">⚡ PR #973: fix(checkout): safely handle undefined subscription tier</span>
-              <span class="pr-tag">✓ Tests Passing (42/42)</span>
+              <span style="font-weight: 700; color: #58a6ff;">🐙 Pull Request #14: fix(auth): null-safe validation for RegisterRequest</span>
+              <span style="background: #238636; color: white; padding: 2px 7px; border-radius: 10px; font-size: 11px; font-weight: bold;">✓ 42/42 CI Passed</span>
             </div>
-            <div style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">
-              Branch: <code>switchops/hotfix-inc-9042</code> • Automated reproduction test suite included.
+            <div style="font-size: 11.5px; color: #8b949e; margin-top: 4px;">
+              Target: <code>priyagupta35/techpulse:main</code> &bull; Branch: <code>switchops/hotfix-techpulse-inc-7701</code>
             </div>
           </div>
+        </div>
 
-          <!-- HUMAN PERMISSION GATE -->
-          <div class="guardrail-card" id="guardrailGate">
-            <div class="guardrail-header">
-              <span class="guardrail-title">🛡️ SWITCH GUARDRAIL: HUMAN PERMISSION REQUIRED</span>
-              <span class="guardrail-badge">AWAITING APPROVAL</span>
-            </div>
-            <div class="guardrail-desc">
-              Switch policy prevents autonomous deployment to production without verified human consent. Review the hotfix patch and authorize deployment:
-            </div>
-            <div class="guardrail-meta">
-              <span><strong>Target:</strong> PaymentProcessorService (production)</span>
-              <span><strong>Action:</strong> Merge PR #973 & Deploy Canary</span>
-              <span><strong>Risk Level:</strong> <span style="color: #ef4444; font-weight: bold;">HIGH</span></span>
-            </div>
-            <div class="guardrail-actions" id="guardrailActions">
-              <button class="btn-approve" onclick="handleHumanApproval(true)">✅ Approve & Execute Deployment</button>
-              <button class="btn-reject" onclick="handleHumanApproval(false)">❌ Reject & Request Changes</button>
+        <!-- Human Permission Guardrail Card -->
+        <div class="slack-card guardrail-card" id="guardrailCard">
+          <div class="card-title" style="color: #ecb22e;">
+            <span>🛡️ Switch Human-in-the-Loop Guardrail: Deployment Authorization</span>
+          </div>
+          <div style="font-size: 13px; line-height: 1.5; color: #e2e8f0; margin-bottom: 8px;">
+            Autonomous hotfix verified in sandbox. <strong>Switch policy prevents unapproved production deployments</strong>. Please review PR #14 and authorize production rollout:
+          </div>
+          <div class="tags-row" style="margin-bottom: 10px;">
+            <span class="slack-tag">target: <strong>AWS ECS Cluster (production)</strong></span>
+            <span class="slack-tag">action: <strong>merge &amp; rolling update</strong></span>
+            <span class="slack-tag" style="border-color: #e01e5a; color: #f87171;">risk: <strong>HIGH</strong></span>
+          </div>
+          <div class="slack-btn-row" id="guardrailButtons">
+            <button class="slack-btn btn-approve-slack" onclick="approveDeployment()">✅ Approve &amp; Deploy to Production</button>
+            <button class="slack-btn btn-deny-slack" onclick="denyDeployment()">❌ Deny &amp; Abort</button>
+          </div>
+        </div>
+      \`);
+    }
+
+    async function approveDeployment() {
+      const btns = document.getElementById('guardrailButtons');
+      if (btns) {
+        btns.innerHTML = \`<span style="color: #2bac76; font-weight: 700; font-size: 12.5px;">✅ AUTHORIZED by Jordan Rivera (Staff SRE Lead) at \${new Date().toLocaleTimeString()}</span>\`;
+      }
+
+      // Jordan chat
+      appendMessage('avatar-jordan', 'JR', 'Jordan Rivera', false,
+        'Reviewed the diff on GitHub. It safely handles null payloads in RegisterRequest. Approved deployment.');
+
+      typingBar.style.display = 'block';
+      await sleep(1500);
+      typingBar.style.display = 'none';
+
+      // SwitchOps deployment confirmation
+      appendMessage('avatar-switch', '⚡', 'SwitchOps', true, \`
+        <div class="slack-card success-card">
+          <div class="card-title" style="color: #2bac76;">
+            <span>🚀 Production Deployment Complete</span>
+          </div>
+          <div>
+            • PR #14 successfully merged into <code>main</code>.<br>
+            • AWS ECS canary container health: <strong>100% HEALTHY</strong>.<br>
+            • Registration API error rate dropped from 15.2% &rarr; <strong>0.00%</strong>.<br>
+            • Incident <strong>INC-7701</strong> is marked <strong>RESOLVED</strong>.
+          </div>
+        </div>
+      \`, [{emoji: '🚀', count: 5}, {emoji: '🎉', count: 4}]);
+
+      const livePill = document.getElementById('livePill');
+      if (livePill) {
+        livePill.style.background = 'rgba(43, 172, 118, 0.15)';
+        livePill.style.borderColor = '#2bac76';
+        livePill.style.color = '#2bac76';
+        livePill.innerHTML = '✓ INCIDENT RESOLVED';
+      }
+
+      await sleep(1200);
+
+      // Postmortem report
+      appendMessage('avatar-switch', '⚡', 'SwitchOps', true, \`
+        <div class="slack-card">
+          <div class="card-title">
+            <span>📄 Incident Post-Mortem Generated (INC-7701)</span>
+          </div>
+          <div style="font-size: 13px; line-height: 1.6;">
+            <strong>• Service</strong>: TechPulse Registration API<br>
+            <strong>• Duration</strong>: 14 Minutes | <strong>Financial Risk Mitigated</strong>: $14,800 USD<br>
+            <strong>• Root Cause</strong>: Missing payload null check in <code>RegisterRequest.java</code><br>
+            <strong>• Action Items</strong>:
+            <div style="margin-left: 12px; margin-top: 4px;">
+              1. Add <code>@NotNull</code> validation annotations across all TechPulse DTOs (@alex)<br>
+              2. Add integration test covering empty JSON requests (@sarah)<br>
+              3. Deploy SwitchOps pre-merge canary bot to CI pipeline (@sre-team)
             </div>
           </div>
         </div>
       \`);
     }
 
-    async function handleHumanApproval(approved) {
-      const actionsDiv = document.getElementById('guardrailActions');
-      if (!actionsDiv) return;
-
-      if (approved) {
-        hasApprovedDeploy = true;
-        actionsDiv.innerHTML = \`
-          <div class="guardrail-status-banner status-approved">
-            ✅ AUTHORIZED BY: Jordan Rivera (Staff SRE Lead) at \${new Date().toLocaleTimeString()}
-          </div>
-        \`;
-
-        // Alex acknowledges
-        appendMessage('👨‍🔧', 'Alex Rivera', 'Senior Backend Dev', false,
-          'Verified the patch! I approved the PR on GitHub too. Deploying now.');
-
-        // Typing indicator
-        typingIndicator.style.display = 'flex';
-        await sleep(1500);
-        typingIndicator.style.display = 'none';
-
-        // SwitchOps proceeds with deployment execution
-        appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
-          🚀 <strong>Production Deployment Executed (Authorized by SRE Lead)</strong>:<br>
-          • Merged PR #973 into <code>main</code> branch.<br>
-          • Canary pods deployed to AWS us-east-1.<br>
-          • <strong>Health Check</strong>: Checkout error rate dropped from 15% ➔ <strong>0.00%</strong>.<br>
-          • Incident INC-9042 status updated to <strong>RESOLVED</strong>.
-        \`);
-
-        // Update top status pill to green
-        const pill = document.getElementById('statusPill');
-        if (pill) {
-          pill.style.background = 'rgba(16, 185, 129, 0.15)';
-          pill.style.borderColor = '#10b981';
-          pill.style.color = '#34d399';
-          pill.innerHTML = '✓ INCIDENT RESOLVED';
-        }
-
-        await sleep(1500);
-
-        // Jordan asks for postmortem
-        appendMessage('👨‍💻', 'Jordan Rivera', 'Staff SRE Lead', false,
-          '@SwitchOps postmortem --include-action-items');
-
-        typingIndicator.style.display = 'flex';
-        await sleep(1600);
-        typingIndicator.style.display = 'none';
-
-        // Postmortem
-        appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
-          <div>
-            <div style="font-weight: 700; color: #10b981; margin-bottom: 8px;">📄 Post-Mortem Report Generated (Incident INC-9042)</div>
-            
-            <div class="metric-grid">
-              <div class="metric-card">
-                <div class="metric-value">14 min</div>
-                <div class="metric-label">Mean Time to Resolve</div>
-              </div>
-              <div class="metric-card">
-                <div class="metric-value">185</div>
-                <div class="metric-label">Failed Checkouts</div>
-              </div>
-              <div class="metric-card">
-                <div class="metric-value">$14,800</div>
-                <div class="metric-label">Revenue Recovered</div>
-              </div>
-            </div>
-
-            <div style="background: #0f1318; border: 1px solid var(--card-border); border-radius: 6px; padding: 12px; font-size: 13px;">
-              <div style="font-weight: 700; margin-bottom: 4px;">Assigned Action Items:</div>
-              <div>• [HIGH] Add ESLint rule for strict optional chaining on nullable schemas (Owner: <strong>@alex</strong>)</div>
-              <div>• [HIGH] Introduce contract integration tests for guest customer checkouts (Owner: <strong>@sarah</strong>)</div>
-              <div>• [MEDIUM] Deploy SwitchOps pre-merge canary validation bot (Owner: <strong>@sre-team</strong>)</div>
-            </div>
-          </div>
-        \`);
-      } else {
-        actionsDiv.innerHTML = \`
-          <div class="guardrail-status-banner status-rejected">
-            ❌ REJECTED BY: Human Operator at \${new Date().toLocaleTimeString()}
-          </div>
-        \`;
-        appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true,
-          '⚠️ <strong>Deployment Aborted</strong>: Hotfix deployment was halted per human instruction. No changes were applied to production.');
+    function denyDeployment() {
+      const btns = document.getElementById('guardrailButtons');
+      if (btns) {
+        btns.innerHTML = \`<span style="color: #e01e5a; font-weight: 700; font-size: 12.5px;">❌ DENIED by Human SRE at \${new Date().toLocaleTimeString()}</span>\`;
       }
+      appendMessage('avatar-switch', '⚡', 'SwitchOps', true,
+        '⚠️ <strong>Deployment Aborted</strong>: Hotfix deployment was halted per human command. No changes applied.');
     }
 
-    function quickAsk(text) {
-      const input = document.getElementById('chatInput');
-      input.value = text;
-      sendCustomMessage();
+    async function triggerIncidentSimulation() {
+      // 1. Sentry alert
+      displayLiveAlertFromTechPulse({
+        title: 'NullPointerException in RegisterRequest',
+        service: 'techpulse-auth-service',
+        errorMessage: 'NullPointerException: Cannot invoke getEmail() on null RegisterRequest',
+        stackTrace: 'java.lang.NullPointerException: Cannot invoke getEmail() on null RegisterRequest\\n    at com.techpulse.service.UserService.registerUser(UserService.java:38)\\n    at com.techpulse.controller.AuthController.register(AuthController.java:24)'
+      });
+
+      await sleep(1400);
+
+      // 2. Jordan mentions SwitchOps
+      appendMessage('avatar-jordan', 'JR', 'Jordan Rivera', false,
+        '🚨 <strong>@channel</strong> Auth service failure rate is spiking to 15% in production right now. Sentry is firing P0 alerts on <code>RegisterRequest</code>. <strong>@SwitchOps</strong> please triage and isolate root cause.',
+        [{emoji: '👀', count: 3}]);
+
+      typingBar.style.display = 'block';
+      await sleep(2000);
+      typingBar.style.display = 'none';
+
+      // 3. SwitchOps responds
+      displayLiveSwitchOpsTriage({});
     }
 
-    function handleKey(e) {
-      if (e.key === 'Enter') sendCustomMessage();
+    function handleInputKey(e) {
+      if (e.key === 'Enter') sendHumanMessage();
     }
 
-    async function sendCustomMessage() {
-      const input = document.getElementById('chatInput');
+    function sendHumanMessage() {
+      const input = document.getElementById('slackInput');
       const val = input.value.trim();
       if (!val) return;
-      appendMessage('👤', 'You', 'Engineer', false, val);
+      appendMessage('avatar-jordan', 'JR', 'Jordan Rivera', false, val);
       input.value = '';
 
-      typingIndicator.style.display = 'flex';
-      await sleep(700);
-      typingIndicator.style.display = 'none';
-
-      const lower = val.toLowerCase();
-
-      if (lower.includes('techpulse')) {
-        appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
-          <div>
-            <div style="font-weight: 700; color: #ef4444; margin-bottom: 6px;">🚨 P0 INCIDENT: TechPulse Registration API 500 Outage (INC-7701)</div>
-            <div><strong>Repository</strong>: <code>priyagupta35/techpulse</code> | <strong>Service</strong>: <code>TechPulse-AuthService</code></div>
-            <div><strong>Error</strong>: <code>NullPointerException: Cannot invoke getEmail() on null RegisterRequest</code></div>
-            
-            <div style="margin-top: 8px;">🎯 <strong>Root Cause Isolated</strong>:</div>
-            <div>• <strong>Suspect File</strong>: <code>src/main/java/com/techpulse/dto/RegisterRequest.java:7</code></div>
-            <div>• <strong>Diagnosis</strong>: <code>AuthController.register()</code> accessed payload fields without null validation when client sends empty JSON body.</div>
-            
-            <div class="code-box">
---- a/src/main/java/com/techpulse/controller/AuthController.java<br>
-+++ b/src/main/java/com/techpulse/controller/AuthController.java<br>
-@@ -23,3 +23,7 @@<br>
--  User user = userService.register(request.getEmail(), request.getPassword());<br>
-+  // SwitchOps Safe Fix: Add validation boundary<br>
-+  if (request == null || request.getEmail() == null) {<br>
-+    return ResponseEntity.badRequest().body("Invalid registration payload");<br>
-+  }<br>
-+  User user = userService.register(request.getEmail(), request.getPassword());
-            </div>
-
-            <div class="pr-card">
-              <span class="pr-title">⚡ PR #12: fix(auth): add null-safe validation to RegisterRequest payload [techpulse]</span>
-              <div style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">
-                Branch: <code>switchops/hotfix-techpulse-inc-7701</code> • Target: <code>priyagupta35/techpulse:main</code>
-              </div>
-            </div>
-            <div style="margin-top: 8px; color: #38bdf8; font-weight: 600;">👉 Ready to deploy to TechPulse. Requires SRE authorization.</div>
-          </div>
-        \`);
-      } else if (lower.includes('status')) {
-        appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
-          📊 <strong>Current Switch War Room Status</strong>:<br>
-          • <strong>Room</strong>: <code>#incident-war-room (incident-war-room-402)</code><br>
-          • <strong>Health</strong>: <code>\${hasApprovedDeploy ? 'OPERATIONAL' : 'P0_TRIAGE'}</code><br>
-          • <strong>Active Guardrail</strong>: <code>Human Permission Required for Merges</code><br>
-          • <strong>Active AI Teammate</strong>: <code>@SwitchOps</code> (via Switch Agent Bridge)
-        \`);
-      } else if (lower.includes('approval') || lower.includes('guardrail') || lower.includes('permission')) {
-        appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
-          🛡️ <strong>Switch Human-in-the-Loop Guardrail Policy</strong>:<br>
-          Switch operates under strict <strong>Human-in-the-Loop oversight</strong>:<br>
-          1. <strong>Read Operations</strong> (git log, stack trace parsing, test execution) are autonomous.<br>
-          2. <strong>Destructive Operations</strong> (merging PRs, deploying to production, altering infra) <strong>REQUIRE explicit human sign-off</strong> in this channel.<br>
-          3. Engineers must click <strong>[Approve]</strong> or explicitly type authorization before any code reaches production.
-        \`);
-      } else if (lower.includes('diff') || lower.includes('blame') || lower.includes('commit')) {
-        appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
-          🔍 <strong>Culprit Commit Inspection (<code>7b4f91e</code>)</strong>:<br>
-          • <strong>Author</strong>: Alex Rivera &lt;alex@acmepay.io&gt;<br>
-          • <strong>File</strong>: <code>src/services/PaymentProcessor.ts:44</code><br>
-          • <strong>Diff</strong>:
-          <div class="code-box">
--   const discount = user.getDiscountRate();
-+   // Added dynamic tier checking
-+   const userTier = customer.subscription.tier; // 💥 Undefined for guest checkouts
-+   const discount = this.calculateTierDiscount(userTier);
-          </div>
-        \`);
-      } else if (lower.includes('test') || lower.includes('repro')) {
-        appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
-          🧪 <strong>Automated Regression Suite (<code>tests/repro_inc_9042.spec.ts</code>)</strong>:<br>
-          <div class="code-box">
-describe('Incident INC-9042 Reproduction', () => {
-  it('should handle checkout when customer has no active subscription', async () => {
-    const guestCustomer = { id: 'guest_99', subscription: undefined };
-    const res = await processor.processCheckout(guestCustomer, 100);
-    expect(res.status).toBe('SUCCESS'); // PASS (with SwitchOps hotfix)
-  });
-});
-          </div>
-          <span class="pr-tag">✓ 42 / 42 Tests Passed (Local CI)</span>
-        \`);
-      } else if (lower.includes('pr') || lower.includes('pull request')) {
-        appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
-          ⚡ <strong>Active Hotfix Pull Request</strong>:
-          <div class="pr-card">
-            <span class="pr-title">PR #973: fix(checkout): safely handle undefined subscription tier [INC-9042]</span>
-            <div style="font-size: 12px; color: var(--text-dim); margin-top: 6px;">
-              • Branch: <code>switchops/hotfix-inc-9042</code><br>
-              • Base: <code>main</code><br>
-              • Guardrail Status: <strong>Awaiting Human Sign-off</strong>
-            </div>
-          </div>
-        \`);
-      } else if (lower.includes('postmortem') || lower.includes('summary')) {
-        appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
-          📄 <strong>Executive Post-Mortem Summary</strong>:<br>
-          • <strong>Incident Duration</strong>: 14 Minutes<br>
-          • <strong>Financial Impact</strong>: $14,800 USD revenue protected<br>
-          • <strong>Mitigation</strong>: Replaced unchecked property lookup with optional chaining fallback.<br>
-          • <strong>Human Approver</strong>: Staff SRE Lead Jordan Rivera.
-        \`);
-      } else {
-        appendMessage('🤖', 'SwitchOps', 'SWITCH AI AGENT', true, \`
-          ⚡ <strong>SwitchOps Received</strong>: "\${val}".<br>
-          I am monitoring the repository. You can ask me to:
-          • Check incident status (<code>@SwitchOps status</code>)<br>
-          • Inspect breaking commit (<code>@SwitchOps diff</code>)<br>
-          • View guardrail rules (<code>@SwitchOps guardrails</code>)
-        \`);
-      }
+      typingBar.style.display = 'block';
+      setTimeout(() => {
+        typingBar.style.display = 'none';
+        const low = val.toLowerCase();
+        if (low.includes('status')) {
+          appendMessage('avatar-switch', '⚡', 'SwitchOps', true,
+            '📊 <strong>Room Status</strong>: All systems nominal. Monitoring <code>priyagupta35/techpulse</code>.');
+        } else if (low.includes('diff') || low.includes('commit')) {
+          appendMessage('avatar-switch', '⚡', 'SwitchOps', true,
+            '🔍 <strong>Commit 7b4f91e</strong> by Alex Rivera modified <code>AuthController.java</code> and <code>RegisterRequest.java</code> 18 minutes ago.');
+        } else {
+          appendMessage('avatar-switch', '⚡', 'SwitchOps', true,
+            \`⚡ Acknowledged: "\${val}". SwitchOps is actively monitoring this room.\`);
+        }
+      }, 700);
     }
   </script>
 </body>
